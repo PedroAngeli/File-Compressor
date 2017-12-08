@@ -6,9 +6,14 @@
 
 int main(int argc,char** argv)
 {
+	char nomeArquivo[100];
+	char acao[100];
+
 	VerificaParametro(argc);
+
+	NomeArquivo(argv[1],nomeArquivo);
 		
-	FILE* entrada =  AbrirArquivo('r',argv[1]);
+	FILE* entrada =  AbrirArquivo('r',nomeArquivo);
 
 	VerificaArquivo(entrada);
 

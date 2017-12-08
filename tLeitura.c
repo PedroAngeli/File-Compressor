@@ -64,3 +64,7 @@ void VerificaFrequencia(long long unsigned int* frequencia,unsigned char* bytesD
 	for(i=0;i<tamanhoDoArquivo;i++)
 		frequencia[(int)bytesDoArquivo[i]]++;
 }
+void NomeArquivo(char* argv,char* nomeArquivo)
+{
+	strcpy(nomeArquivo,argv);
+}

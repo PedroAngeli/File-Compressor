@@ -22,4 +22,8 @@ void ZeraFrequencia(long long unsigned int* frequencia,int tam);
 
 void VerificaFrequencia(long long unsigned int* frequencia,unsigned char* bytesDoArquivo,long long unsigned int tamanhoDoArquivo);
 
+void NomeArquivo(char* argv,char* nomeArquivo);
+
+void Acao(char* argv);
+
 #endif
