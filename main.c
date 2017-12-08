@@ -17,6 +17,8 @@ int main(int argc,char** argv)
 
 	VerificaArquivo(entrada);
 
+	Acao(argv[2],acao);
+
 	long long unsigned int tamanhoDoArquivo = CalculaTamanhoArquivo(entrada);
 
 	unsigned char bytesDoArquivo[tamanhoDoArquivo]; 

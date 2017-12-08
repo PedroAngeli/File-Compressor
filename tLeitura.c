@@ -68,3 +68,8 @@ void NomeArquivo(char* argv,char* nomeArquivo)
 {
 	strcpy(nomeArquivo,argv);
 }
+
+void Acao(char* argv)
+{
+	strcpy(acao,argv);
+}
