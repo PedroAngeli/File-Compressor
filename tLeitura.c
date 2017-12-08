@@ -69,7 +69,17 @@ void NomeArquivo(char* argv,char* nomeArquivo)
 	strcpy(nomeArquivo,argv);
 }
 
-void Acao(char* argv)
+void Acao(char* argv,char* acao)
 {
 	strcpy(acao,argv);
+}
+
+void VerificaAcao(int argc)
+{
+	if(argc<=2)
+	{
+		printf("Digite a acao desejada.\n");
+		exit(1);
+	}
+
 }

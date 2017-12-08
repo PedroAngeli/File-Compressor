@@ -8,16 +8,18 @@ int main(int argc,char** argv)
 {
 	char nomeArquivo[100];
 	char acao[100];
+	Lista* lista;
 
 	VerificaParametro(argc);
+	VerificaAcao(argc);
 
 	NomeArquivo(argv[1],nomeArquivo);
+
+	Acao(argv[2],acao);
 		
 	FILE* entrada =  AbrirArquivo('r',nomeArquivo);
 
 	VerificaArquivo(entrada);
-
-	Acao(argv[2],acao);
 
 	long long unsigned int tamanhoDoArquivo = CalculaTamanhoArquivo(entrada);
 
@@ -33,8 +35,10 @@ int main(int argc,char** argv)
 
 	VerificaFrequencia(frequencia,bytesDoArquivo,tamanhoDoArquivo);
 
-	for(int i=0;i<257;i++)
-		printf("%c:  %llu\n",(char)i,frequencia[i]);
+	lista=CriaListaVazia();
+
+	CriaListaDeArvore(lista,bytesDoArquivo,frequencia,MAX_SIZE_OF_ASCII);
+	
 
 	
 	return 0;

@@ -24,6 +24,8 @@ void VerificaFrequencia(long long unsigned int* frequencia,unsigned char* bytesD
 
 void NomeArquivo(char* argv,char* nomeArquivo);
 
-void Acao(char* argv);
+void Acao(char* argv,char* acao);
+
+void VerificaAcao(int argc);
 
 #endif
