@@ -52,3 +52,43 @@ void InsereNaLista(Lista* lista,Arvore* arv)
 	}
 }
 
+void OrdenaLista(Lista* lista)
+{
+	int verifica=1;
+	Celula* ant;
+
+	while(verifica)
+	{
+		verifica=0;
+
+		for(Celula* p = lista->primeiro;p!=lista->ultimo;p=p->prox)
+		{
+				if(ArvoreValor(p->arvore) < ArvoreValor(p->prox->arvore))
+				{
+					if(p==lista->primeiro)
+					{
+						
+					}
+					else
+					{
+						
+						
+					}
+					verifica=1;
+				}
+			
+			ant=p;
+		}
+		
+	}
+
+}
+
+void ImprimeLista(Lista* lista)
+{
+	//tam=TamanhoDaLista(lista);
+
+	for(Celula* p=lista->primeiro;p!=NULL;p=p->prox)
+		printf("%c ",ArvoreInfo(p->arvore));
+}
+

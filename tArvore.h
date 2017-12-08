@@ -7,5 +7,8 @@ typedef struct arvore Arvore;
 
 Arvore* CriaArvore(Arvore* esq,Arvore* dir,int valor,char info);
 
+int ArvoreValor(Arvore* arv);
+
+char ArvoreInfo(Arvore* arv);
 
 #endif

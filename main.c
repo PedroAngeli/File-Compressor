@@ -39,6 +39,9 @@ int main(int argc,char** argv)
 
 	CriaListaDeArvore(lista,bytesDoArquivo,frequencia,MAX_SIZE_OF_ASCII);
 	
+	OrdenaLista(lista);
+
+	ImprimeLista(lista);
 
 	
 	return 0;

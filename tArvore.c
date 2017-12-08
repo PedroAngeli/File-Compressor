@@ -22,3 +22,12 @@ Arvore* CriaArvore(Arvore* esq,Arvore* dir,int valor,char info)
 	return arv;
 }
 
+int ArvoreValor(Arvore* arv)
+{
+	return arv->valor;
+}
+
+char ArvoreInfo(Arvore* arv)
+{
+	return arv->info;
+}
