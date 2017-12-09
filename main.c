@@ -16,14 +16,14 @@ int main(int argc,char** argv)
 	NomeArquivo(argv[1],nomeArquivo);
 
 	Acao(argv[2],acao);
-		
+
 	FILE* entrada =  AbrirArquivo('r',nomeArquivo);
 
 	VerificaArquivo(entrada);
 
 	long long unsigned int tamanhoDoArquivo = CalculaTamanhoArquivo(entrada);
 
-	unsigned char bytesDoArquivo[tamanhoDoArquivo]; 
+	unsigned char bytesDoArquivo[tamanhoDoArquivo];
 
 	LerArquivo(tamanhoDoArquivo,entrada,bytesDoArquivo);
 
@@ -38,11 +38,11 @@ int main(int argc,char** argv)
 	lista=CriaListaVazia();
 
 	CriaListaDeArvore(lista,bytesDoArquivo,frequencia,MAX_SIZE_OF_ASCII);
-	
-	OrdenaLista(lista);
 
+	OrdenaLista(lista);
+	//IteraHuffman(lista); //Falta InserirOrdenado, o resto tá pronto
 	ImprimeLista(lista);
 
-	
+
 	return 0;
 }

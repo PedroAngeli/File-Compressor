@@ -8,7 +8,7 @@ struct celula
 
 struct lista
 {
-	Celula *primeiro, *ultimo;	
+	Celula *primeiro, *ultimo;
 };
 
 Lista* CriaListaVazia()
@@ -54,8 +54,30 @@ void InsereNaLista(Lista* lista,Arvore* arv)
 
 void OrdenaLista(Lista* lista)
 {
+
+	//selection sort
+	if(lista->primeiro == NULL) return;
+	if(lista->primeiro == lista->ultimo) return;
+	Celula* p = lista->primeiro;
+	Celula* t;
+	Arvore* aux;
+	while(p != NULL){
+		t = p->prox;
+		while(t != NULL){
+			if(ArvoreValor(p->arvore) > ArvoreValor(t->arvore)){
+				aux = p->arvore;
+				p->arvore = t->arvore;
+				t->arvore = aux;
+			}
+			t = t->prox;
+		}
+		p = p->prox;
+	}
+	//bubblesort
+	/*if(lista->primeiro == NULL) return;
+	if(lista->primeiro == lista->ultimo) return;
 	int verifica=1;
-	Celula* ant;
+	Arvore* aux;
 
 	while(verifica)
 	{
@@ -65,22 +87,14 @@ void OrdenaLista(Lista* lista)
 		{
 				if(ArvoreValor(p->arvore) < ArvoreValor(p->prox->arvore))
 				{
-					if(p==lista->primeiro)
-					{
-						
-					}
-					else
-					{
-						
-						
-					}
+					aux = p->arvore;
+					p->prox->arvore = p->arvore;
+					p->arvore = aux;
 					verifica=1;
 				}
-			
-			ant=p;
 		}
-		
-	}
+
+	}*/
 
 }
 
@@ -92,3 +106,14 @@ void ImprimeLista(Lista* lista)
 		printf("%c ",ArvoreInfo(p->arvore));
 }
 
+void IteraHuffman(Lista* lista){
+	OrdenaLista(lista);
+	Arvore* arv;
+	Celula* p = lista->primeiro;
+	//Descomente o While quando fizer a funcao InsereOrdenado
+	//while(p->prim != p->ultimo){
+		arv = CriaPai(p->arvore, p->prox->arvore);
+		//InsereOrdenado(arv);
+		lista->primeiro = p->prox->prox;
+	//}
+}

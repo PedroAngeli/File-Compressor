@@ -22,6 +22,11 @@ Arvore* CriaArvore(Arvore* esq,Arvore* dir,int valor,char info)
 	return arv;
 }
 
+Arvore* CriaPai(Arvore* esq, Arvore* dir){
+	int soma = ArvoreValor(esq) + ArvoreValor(dir);
+	return CriaArvore(esq, dir, soma, '\0');
+}
+
 int ArvoreValor(Arvore* arv)
 {
 	return arv->valor;

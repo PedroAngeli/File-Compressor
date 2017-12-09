@@ -19,4 +19,7 @@ void OrdenaLista(Lista* lista);
 
 void ImprimeLista(Lista* lista);
 
+void IteraHuffman(Lista* lista);
+
+void InsereOrdenado(Arvore* arv, Lista* lista);
 #endif
