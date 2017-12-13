@@ -52,6 +52,14 @@ void InsereNaLista(Lista* lista,Arvore* arv)
 	}
 }
 
+void InsereNoFinal(Lista* lista, Arvore* arv){
+	Celula* p = (Celula*) malloc(sizeof(Celula));
+	lista->ultimo->prox = p;
+	lista->ultimo = p;
+	p->prox = NULL;
+	p->arvore = arv;
+}
+
 void OrdenaLista(Lista* lista)
 {
 
@@ -103,17 +111,22 @@ void ImprimeLista(Lista* lista)
 	//tam=TamanhoDaLista(lista);
 
 	for(Celula* p=lista->primeiro;p!=NULL;p=p->prox)
-		printf("%c ",ArvoreInfo(p->arvore));
+		printf("{%c:%d}\t",ArvoreInfo(p->arvore), ArvoreValor(p->arvore));
+	printf("\n");
 }
 
 void IteraHuffman(Lista* lista){
 	OrdenaLista(lista);
 	Arvore* arv;
-	Celula* p = lista->primeiro;
-	//Descomente o While quando fizer a funcao InsereOrdenado
-	//while(p->prim != p->ultimo){
+	Celula* p;
+	while(lista->primeiro != lista->ultimo){
+		p = lista->primeiro;
 		arv = CriaPai(p->arvore, p->prox->arvore);
-		//InsereOrdenado(arv);
+		InsereNoFinal(lista, arv);
 		lista->primeiro = p->prox->prox;
-	//}
+		OrdenaLista(lista);
+		//ImprimeLista(lista);
+		//printf("L->prim={%c:%d}, L->ult={%c:%d}\n", ArvoreInfo(lista->primeiro->arvore), ArvoreValor(lista->primeiro->arvore), ArvoreInfo(lista->ultimo->arvore), ArvoreValor(lista->ultimo->arvore));
+	}
+		printf("TAM: %d\n", TamanhoArvore(arv));
 }

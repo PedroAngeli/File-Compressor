@@ -38,11 +38,14 @@ int main(int argc,char** argv)
 	lista=CriaListaVazia();
 
 	CriaListaDeArvore(lista,bytesDoArquivo,frequencia,MAX_SIZE_OF_ASCII);
-
+	
 	OrdenaLista(lista);
-	//IteraHuffman(lista); //Falta InserirOrdenado, o resto tá pronto
+	
 	ImprimeLista(lista);
-
-
+	
+	IteraHuffman(lista);
+	
+	ImprimeLista(lista);
+	
 	return 0;
 }
