@@ -1,6 +1,7 @@
 #include "tArvore.h"
 #include "tLista.h"
 #include "tLeitura.h"
+#include "tHuffman.h"
 
 #define MAX_SIZE_OF_ASCII 256
 
@@ -47,7 +48,18 @@ int main(int argc,char** argv)
 
 	ImprimeLista(lista);
 
-	
+
+	char* Cabecalho;
+	Cabecalho = CriaCabecalho(lista, Cabecalho);
+
+	char** Codigo;
+	Codigo = CriaVetorDeCodigos(lista, Codigo);
+
+
+	printf("%s", Cabecalho);
+	printf("%s", Codigo['p']); //Nao funciona FIX ME
+
+
 
 	return 0;
 }

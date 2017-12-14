@@ -21,7 +21,19 @@ void OrdenaLista(Lista* lista);
 
 void ImprimeLista(Lista* lista);
 
-void IteraHuffman(Lista* lista);
-
 void InsereOrdenado(Arvore* arv, Lista* lista);
+
+Celula* ListaProx(Celula* lista);
+
+Celula* ListaPrimeiro(Lista* lista);
+
+Celula* ListaUltimo(Lista* lista);
+
+Arvore* ListaArvore(Celula* lista);
+
+void ModificaPrimeiro(Lista* lista, Celula* dest);
+
+void ModificaPrimeiro(Lista* lista, Celula* dest);
+
+
 #endif

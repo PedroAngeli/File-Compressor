@@ -15,10 +15,12 @@ char ArvoreInfo(Arvore* arv);
 
 int ArvoreVazia(Arvore* arv);
 
-char* CriaCabecalho(Arvore* arv, char* header, char* value);
-
 void ImprimeArvore(Arvore *arv);
 
 int TamanhoArvore(Arvore* arv);
+
+char* ObtemCodigoDoChar(Arvore* arv, char info, char* buffer, char* value);
+
+char* GeraStringCabecalho(Arvore* arv, char* header, char* value);
 
 #endif

@@ -12,6 +12,30 @@ struct lista
 	Celula *primeiro, *ultimo;
 };
 
+Arvore* ListaArvore(Celula* lista){
+	return lista->arvore;
+}
+
+Celula* ListaPrimeiro(Lista* lista){
+	return lista->primeiro;
+}
+
+Celula* ListaUltimo(Lista* lista){
+	return lista->ultimo;
+}
+
+Celula* ListaProx(Celula* lista){
+	return lista->prox;
+}
+
+void ModificaPrimeiro(Lista* lista, Celula* dest){
+	lista->primeiro = dest;
+}
+
+void ModificaUltimo(Lista* lista, Celula* dest){
+	lista->ultimo = dest;
+}
+
 Lista* CriaListaVazia()
 {
 	Lista* lista = (Lista*) malloc(sizeof(Lista));
@@ -114,22 +138,4 @@ void ImprimeLista(Lista* lista)
 	for(Celula* p=lista->primeiro;p!=NULL;p=p->prox)
 		printf("{%c:%d}\t",ArvoreInfo(p->arvore), ArvoreValor(p->arvore));
 	printf("\n");
-}
-
-void IteraHuffman(Lista* lista){
-	OrdenaLista(lista);
-	Arvore* arv;
-	Celula* p;
-	while(lista->primeiro != lista->ultimo){
-		p = lista->primeiro;
-		arv = CriaPai(p->arvore, p->prox->arvore);
-		InsereNoFinal(lista, arv);
-		lista->primeiro = p->prox->prox;
-		OrdenaLista(lista);
-	}
-	/*Cabecalho*/
-	char* header = (char*) malloc(sizeof(char)*2305);
-	strcpy(header, CriaCabecalho(arv, NULL, NULL));
-	printf("%s\n", header);
-
 }
