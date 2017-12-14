@@ -15,7 +15,9 @@ char ArvoreInfo(Arvore* arv);
 
 int ArvoreVazia(Arvore* arv);
 
-//void CriaCabecalho(Arvore* arv, char* header, char* value);
+char* CriaCabecalho(Arvore* arv, char* header, char* value);
+
+void ImprimeArvore(Arvore *arv);
 
 int TamanhoArvore(Arvore* arv);
 

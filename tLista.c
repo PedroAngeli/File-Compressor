@@ -1,4 +1,5 @@
 #include "tLista.h"
+#include <string.h>
 
 struct celula
 {
@@ -125,8 +126,10 @@ void IteraHuffman(Lista* lista){
 		InsereNoFinal(lista, arv);
 		lista->primeiro = p->prox->prox;
 		OrdenaLista(lista);
-		//ImprimeLista(lista);
-		//printf("L->prim={%c:%d}, L->ult={%c:%d}\n", ArvoreInfo(lista->primeiro->arvore), ArvoreValor(lista->primeiro->arvore), ArvoreInfo(lista->ultimo->arvore), ArvoreValor(lista->ultimo->arvore));
 	}
-		printf("TAM: %d\n", TamanhoArvore(arv));
+	/*Cabecalho*/
+	char* header = (char*) malloc(sizeof(char)*2305);
+	strcpy(header, CriaCabecalho(arv, NULL, NULL));
+	printf("%s\n", header);
+
 }

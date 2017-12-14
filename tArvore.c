@@ -1,5 +1,6 @@
 #include "tArvore.h"
-
+#include <string.h>
+#include <stdio.h>
 
 struct arvore
 {
@@ -54,30 +55,55 @@ int TamanhoArvore(Arvore* arv){
 	return i;
 }
 
-/*
-void CriaCabecalho(Arvore* arv, char* header, char* value){
+void ImprimeArvore(Arvore *arv){
 	Arvore* p = arv;
-	int tam = TamanhoArvore(arv);
-	char temp[2305];
+	printf("<");
 	if(p != NULL){
-		if(p->esquerda == NULL && p->direita == NULL)
+		printf("(%c:%d)", p->info, p->valor);
+		ImprimeArvore(p->esquerda);
+		ImprimeArvore(p->direita);
+	}
+	printf(">");
+}
+
+char* CriaCabecalho(Arvore* arv, char* header, char* value){
+	Arvore* p = arv;
+	char temp[2305];
+	char* ret1 = (char*) malloc(sizeof(char)*2305);
+	char* ret2 = (char*) malloc(sizeof(char)*2305);
+	if(p != NULL){
+		if(TamanhoArvore(arv) == 1)
 		{
-			char* temp2[2];
+			char temp2[2];
 			temp2[0] = p->info;
 			temp2[1] = '\0';
+			strcat(header, value);
 			strcat(header, temp2);
+			return header;
 		}
-		else
-		{
-			if(value != NULL){
-				strcat(temp, value);
-				CriaCabecalho(p->esquerda, header, "0");
-				strcat(temp, value);
-				CriaCabecalho(p->direita, header, "1");
-				strcat(header, temp);
+		else{
+			if(value == NULL){
+				strcpy(ret1, CriaCabecalho(p->esquerda, temp, "0"));
+				strcpy(ret2, CriaCabecalho(p->direita, temp, "1"));
+			}
+			else{
+				strcpy(temp, header);
+				strcpy(ret1, CriaCabecalho(p->esquerda, strcat(temp, value), "0"));
+				strcpy(temp, header);
+				strcpy(ret2, CriaCabecalho(p->direita, strcat(temp, value), "1"));
+			}
+			if(ret1 != NULL && ret2 != NULL){
+					strcat(ret1, ret2);
+					return ret1;
+			}
+			else if(ret1 != NULL){
+				return ret1;
+			}
+			else if(ret2 != NULL){
+				return ret2;
 			}
 		}
 	}
-}
-*/
 
+	return NULL;
+}
