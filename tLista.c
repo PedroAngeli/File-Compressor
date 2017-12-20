@@ -77,18 +77,41 @@ void InsereNaLista(Lista* lista,Arvore* arv)
 	}
 }
 
-void InsereNoFinal(Lista* lista, Arvore* arv){
+void InsereOrdenado(Lista* lista, Arvore* arv)
+{
 	Celula* p = (Celula*) malloc(sizeof(Celula));
-	lista->ultimo->prox = p;
-	lista->ultimo = p;
-	p->prox = NULL;
 	p->arvore = arv;
+	Celula* ant;	
+
+	for(Celula* aux =  lista->primeiro; aux!=NULL; aux=aux->prox)
+	{
+		if(ArvoreValor(aux->arvore) > ArvoreValor(p->arvore))
+		{
+			if(aux==lista->primeiro)
+			{
+				p->prox=aux;
+				lista->primeiro=p;
+				return;
+			}
+			else
+			{
+				p->prox=ant->prox;
+				ant->prox=p;
+				return;
+			}
+		}
+
+		ant=aux;
+	}
+
+	lista->ultimo=p;
+	ant->prox=p;
+	p->prox=NULL;
 }
 
 void OrdenaLista(Lista* lista)
 {
 
-	//selection sort
 	if(lista->primeiro == NULL) return;
 	if(lista->primeiro == lista->ultimo) return;
 	Celula* p = lista->primeiro;
@@ -106,28 +129,6 @@ void OrdenaLista(Lista* lista)
 		}
 		p = p->prox;
 	}
-	//bubblesort
-	/*if(lista->primeiro == NULL) return;
-	if(lista->primeiro == lista->ultimo) return;
-	int verifica=1;
-	Arvore* aux;
-
-	while(verifica)
-	{
-		verifica=0;
-
-		for(Celula* p = lista->primeiro;p!=lista->ultimo;p=p->prox)
-		{
-				if(ArvoreValor(p->arvore) < ArvoreValor(p->prox->arvore))
-				{
-					aux = p->arvore;
-					p->prox->arvore = p->arvore;
-					p->arvore = aux;
-					verifica=1;
-				}
-		}
-
-	}*/
 
 }
 

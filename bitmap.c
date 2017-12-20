@@ -115,3 +115,5 @@ void bitmapAppendLeastSignificantBit(bitmap* bm, unsigned char bit) {
 	bm->length++;
 	bitmapSetBit(bm, bm->length-1, bit);
 }
+
+

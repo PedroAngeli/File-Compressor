@@ -2,6 +2,7 @@
 #include "tLista.h"
 #include "tLeitura.h"
 #include "tHuffman.h"
+#include "bitmap.h"
 
 #define MAX_SIZE_OF_ASCII 256
 
@@ -40,26 +41,23 @@ int main(int argc,char** argv)
 
 	CriaListaDeArvore(lista,bytesDoArquivo,frequencia,MAX_SIZE_OF_ASCII);
 
-	OrdenaLista(lista);
-
-	ImprimeLista(lista);
-
 	IteraHuffman(lista);
 
-	ImprimeLista(lista);
+	bitmap cabecalho;
 
+	cabecalho = bitmapInit(SIZE_MB);
 
-	char* Cabecalho;
-	Cabecalho = CriaCabecalho(lista, Cabecalho);
+	CriaCabecalho(&cabecalho,ListaArvore(ListaPrimeiro(lista)));
 
-	char** Codigo;
-	Codigo = CriaVetorDeCodigos(lista, Codigo);
+	Tabela* Huffman[MAX_SIZE_OF_ASCII];
 
+	CriaTabelaVazia(Huffman,MAX_SIZE_OF_ASCII);
 
-	printf("%s", Cabecalho);
-	printf("%s", Codigo['p']); //Nao funciona FIX ME
+	bitmap bm = bitmapInit(SIZE_MB);
 
+	CriaTabela(Huffman,bm,2,ListaArvore(ListaPrimeiro(lista)));
 
+	GeraCompactado(Huffman,bytesDoArquivo,tamanhoDoArquivo);
 
 	return 0;
 }

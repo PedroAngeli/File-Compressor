@@ -8,11 +8,23 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#define SIZE_MB 80000000
+
 typedef struct tabela Tabela;
 
-char* CriaCabecalho(Lista* p, char* cabecalho);
+void CriaCabecalho(bitmap* cabecalho,Arvore* arv);
+
 char** CriaVetorDeCodigos(Lista* p, char** codigo);
+
 void IteraHuffman(Lista* lista);
 
+void ImprimeCabecalho(bitmap cabecalho);
 
+void CriaTabela(Tabela** huffman,bitmap bm,int direcao,Arvore* arv);
+
+void CriaTabelaVazia(Tabela** Huffman,int tam);
+
+bitmap BitMapHuffman(Tabela* Huffman);
+
+void GeraCompactado(Huffman,bytesDoArquivo,tamanhoDoArquivo);
 #endif

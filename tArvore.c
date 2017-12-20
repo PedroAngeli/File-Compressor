@@ -23,7 +23,8 @@ Arvore* CriaArvore(Arvore* esq,Arvore* dir,int valor,char info)
 	return arv;
 }
 
-Arvore* CriaPai(Arvore* esq, Arvore* dir){
+Arvore* CriaPai(Arvore* esq, Arvore* dir)
+{
 	int soma = ArvoreValor(esq) + ArvoreValor(dir);
 	return CriaArvore(esq, dir, soma, '\0');
 }
@@ -43,6 +44,15 @@ char ArvoreInfo(Arvore* arv)
 	return arv->info;
 }
 
+Arvore* ArvoreEsquerda(Arvore* arv)
+{
+	return arv->esquerda;
+}
+
+Arvore* ArvoreDireita(Arvore* arv)
+{
+	return arv->direita;
+}
 
 int TamanhoArvore(Arvore* arv){
 	int i = 0;
@@ -66,7 +76,7 @@ void ImprimeArvore(Arvore *arv){
 	printf(">");
 }
 
-char* GeraStringCabecalho(Arvore* arv, char* header, char* value){
+/*char* GeraStringCabecalho(Arvore* arv, char* header, char* value){
 	Arvore* p = arv;
 	char temp[2305];
 	char* ret1 = (char*) malloc(sizeof(char)*2305);
@@ -105,7 +115,7 @@ char* GeraStringCabecalho(Arvore* arv, char* header, char* value){
 		}
 	}
 	return NULL;
-}
+}*/
 char* TransformaCharString(char p){
 	char* str = (char*) malloc(sizeof(char)*2);
 	str[0] = p;
@@ -115,7 +125,7 @@ char* TransformaCharString(char p){
 
 
 
-char* ObtemCodigoDoChar(Arvore* arv, char info, char* header, char* value){
+/*char* ObtemCodigoDoChar(Arvore* arv, char info, char* header, char* value){
 	Arvore* p = arv;
 	char temp[2305];
 	char* ret1 = (char*) malloc(sizeof(char)*2305);
@@ -159,4 +169,4 @@ char* ObtemCodigoDoChar(Arvore* arv, char info, char* header, char* value){
 		}
 	}
 	return NULL;
-}
+}*/

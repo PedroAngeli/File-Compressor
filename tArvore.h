@@ -23,4 +23,7 @@ char* ObtemCodigoDoChar(Arvore* arv, char info, char* buffer, char* value);
 
 char* GeraStringCabecalho(Arvore* arv, char* header, char* value);
 
+Arvore* ArvoreEsquerda(Arvore* arv);
+
+Arvore* ArvoreDireita(Arvore* arv);
 #endif

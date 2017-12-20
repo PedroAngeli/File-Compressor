@@ -15,13 +15,11 @@ void CriaListaDeArvore(Lista* lista,unsigned char* bytesDoArquivo,long long unsi
 
 void InsereNaLista(Lista* lista,Arvore* arv);
 
-void InsereNoFinal(Lista* lista, Arvore* arv);
+void InsereOrdenado(Lista* lista, Arvore* arv);
 
 void OrdenaLista(Lista* lista);
 
 void ImprimeLista(Lista* lista);
-
-void InsereOrdenado(Arvore* arv, Lista* lista);
 
 Celula* ListaProx(Celula* lista);
 
