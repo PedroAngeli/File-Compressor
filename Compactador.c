@@ -9,15 +9,12 @@
 int main(int argc,char** argv)
 {
 	char nomeArquivo[100];
-	char acao[100];
+	
 	Lista* lista;
 
 	VerificaParametro(argc);
-	VerificaAcao(argc);
 
 	NomeArquivo(argv[1],nomeArquivo);
-
-	Acao(argv[2],acao);
 
 	FILE* entrada =  AbrirArquivo('r',nomeArquivo);
 

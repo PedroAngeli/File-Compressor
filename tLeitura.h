@@ -29,4 +29,8 @@ void Acao(char* argv,char* acao);
 
 void VerificaAcao(int argc);
 
+void LerFormato(char* formato,FILE* entrada);
+
+void LeCabecalho(FILE* entrada,int tamanhoAparente);
+
 #endif

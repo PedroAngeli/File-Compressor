@@ -91,3 +91,49 @@ void VerificaAcao(int argc)
 	}
 
 }
+
+void LerFormato(char* formato,FILE* entrada)
+{
+	fscanf(entrada,"%[^#]",formato);
+	fscanf(entrada,"%*c");
+}
+
+void LeCabecalho(FILE* entrada,int tamanhoAparente)
+{
+	int tamanhoReal = ProxMultiploOito(tamanhoAparente);
+	int tamanhoLixo = tamanhoReal - tamanhoAparente;
+
+	bitmap cabecalho = bitmapInit(tamanhoReal);
+	bitmap aux;
+	int contador = 0;
+	
+	int vezes = (tamanhoAparente/8)+1;
+	
+	while(contador < vezes)
+	{
+		aux = bitmapInit(8);
+
+		fscanf(entrada,"%c",&aux.contents[0]);
+		
+		aux.length=8;
+		
+		if(contador != vezes-1) for(int i=0;i<8;i++) bitmapAppendLeastSignificantBit(&cabecalho, bitmapGetBit(aux,i));
+		
+			contador++;
+	}
+	for(int i=0;i<8-tamanhoLixo;i++)
+		bitmapAppendLeastSignificantBit(&cabecalho, bitmapGetBit(aux,i));
+	
+	unsigned char Cabecalho[tamanhoReal+1];
+
+	//printf("%s",cabecalho.contents);
+	int j=0;
+	for(;j<cabecalho.length;j++)
+	{
+		printf("%d",bitmapGetBit(cabecalho,j));
+		Cabecalho[j]=bitmapGetBit(cabecalho,j);
+	}
+
+	
+
+}
