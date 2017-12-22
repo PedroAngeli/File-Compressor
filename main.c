@@ -63,7 +63,7 @@ int main(int argc,char** argv)
 
 	VerificaArquivo(saida);
 
-	GeraCompactado(Huffman,bytesDoArquivo,tamanhoDoArquivo,entrada,saida);
+	GeraCompactado(Huffman,bytesDoArquivo,tamanhoDoArquivo,entrada,saida, cabecalho, nomeArquivo);
 
 	FecharArquivo(saida);
 

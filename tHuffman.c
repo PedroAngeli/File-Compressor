@@ -67,13 +67,28 @@ void CriaCabecalho(bitmap* cabecalho,Arvore* arv)
 		
 }
 
-void ImprimeCabecalho(bitmap cabecalho){
-	printf("%s", bitmapGetContents(cabecalho));
+void EscreveExtensao(char* nomeDoArquivo, FILE* saida){
+	int i, TemPonto = 0;	
+	for(i = 0; i < strlen(nomeDoArquivo); i++){
+		if(nomeDoArquivo[i] == '.'){
+			TemPonto = 1;
+			i++;			
+			break;
+		}
+	}
+	if(TemPonto){
+		fwrite(nomeDoArquivo+i, sizeof(unsigned char), strlen(nomeDoArquivo)-i, saida);
+	}
+	fwrite("#", sizeof(unsigned char), 1, saida);
 }
 
-void GeraCompactado(Tabela** Huffman,unsigned char* bytesDoArquivo,long long unsigned int tamanhoDoArquivo,FILE* entrada,FILE* saida)
+
+
+void GeraCompactado(Tabela** Huffman,unsigned char* bytesDoArquivo,long long unsigned int tamanhoDoArquivo,FILE* entrada,FILE* saida, bitmap cabecalho, char* nomeDoArquivo)
 {
 	bitmap all = bitmapInit(SIZE_MB);
+	EscreveExtensao(nomeDoArquivo, saida);
+	fwrite(bitmapGetContents(cabecalho), sizeof(unsigned char), ProxMultiploOito(bitmapGetLength(cabecalho))/8, saida);
 
 	while(tamanhoDoArquivo>0)
 	{
@@ -98,8 +113,6 @@ void GeraCompactado(Tabela** Huffman,unsigned char* bytesDoArquivo,long long uns
 
 	}
 
-	
-	printf("%d\n",bitmapGetLength(all));
 	fwrite(bitmapGetContents(all),sizeof(unsigned char),ProxMultiploOito(bitmapGetLength(all))/8,saida);
 
 }

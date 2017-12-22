@@ -26,7 +26,9 @@ void CriaTabelaVazia(Tabela** Huffman,int tam);
 
 bitmap BitMapHuffman(Tabela* Huffman);
 
-void GeraCompactado(Tabela** Huffman,unsigned char* bytesDoArquivo,long long unsigned int tamanhoDoArquivo,FILE* entrada,FILE* saida);
+void EscreveExtensao(char* nomeDoArquivo, FILE* saida);
+
+void GeraCompactado(Tabela** Huffman,unsigned char* bytesDoArquivo,long long unsigned int tamanhoDoArquivo,FILE* entrada,FILE* saida, bitmap cabecalho, char* nomeDoArquivo);
 
 unsigned int ProxMultiploOito(unsigned int tam);
 
