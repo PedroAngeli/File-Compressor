@@ -53,7 +53,9 @@ int main(int argc,char** argv)
 
 	bitmap bm = bitmapInit(SIZE_MB);
 
-	CriaTabela(Huffman,bm,2,ListaArvore(ListaPrimeiro(lista)));
+	char folhas[MAX_SIZE_OF_ASCII];
+
+	CriaTabela(Huffman,bm,2,ListaArvore(ListaPrimeiro(lista)),folhas);
 	
 	entrada =  AbrirArquivo('r',nomeArquivo);
 
@@ -63,9 +65,10 @@ int main(int argc,char** argv)
 
 	VerificaArquivo(saida);
 
-	GeraCompactado(Huffman,bytesDoArquivo,tamanhoDoArquivo,entrada,saida, cabecalho, nomeArquivo);
+	GeraCompactado(Huffman,bytesDoArquivo,tamanhoDoArquivo,entrada,saida, cabecalho, nomeArquivo,folhas);
 
 	FecharArquivo(saida);
 
+	
 	return 0;
 }

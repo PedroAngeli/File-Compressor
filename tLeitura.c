@@ -6,7 +6,7 @@ FILE* AbrirArquivo(char c,char* nome)
 	if(c=='r')
 		return fopen(nome,"rb");
 
-	return fopen(nome,"wb");
+	return fopen(nome,"wb+");
 }
 
 void VerificaParametro(int argc)
@@ -71,10 +71,6 @@ void VerificaFrequencia(long long unsigned int* frequencia,unsigned char* bytesD
 	for(i=0;i<tamanhoDoArquivo-1;i++)
 		frequencia[bytesDoArquivo[i]]++;
 
-	/*for(i=0;i<256;i++)
-		if(frequencia[i])
-			printf("%c %d\n",(char)i,frequencia[i]);
-	*/
 }
 void NomeArquivo(char* argv,char* nomeArquivo)
 {

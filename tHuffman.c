@@ -25,7 +25,9 @@ void CriaTabelaVazia(Tabela** Huffman,int tam)
 	
 }
 
-void CriaTabela(Tabela** huffman,bitmap bm,int direcao,Arvore* arv)
+int count=0;
+
+void CriaTabela(Tabela** huffman,bitmap bm,int direcao,Arvore* arv,char* folhas)
 {
 
 	if(arv==NULL) return;
@@ -36,15 +38,17 @@ void CriaTabela(Tabela** huffman,bitmap bm,int direcao,Arvore* arv)
 
 	if(ArvoreEsquerda(arv)==NULL && ArvoreDireita(arv)==NULL)
 	{
-		strncpy(bitmapGetContents(huffman[(unsigned char)ArvoreInfo(arv)]->bm),bitmapGetContents(bm),bitmapGetLength(bm)+1);   
+		folhas[count] = ArvoreInfo(arv);
+		count++;
+		strncpy(bitmapGetContents(huffman[(unsigned char)ArvoreInfo(arv)]->bm),bitmapGetContents(bm),bitmapGetLength(bm));   
 		huffman[(unsigned char)ArvoreInfo(arv)]->bm.max_size = bitmapGetMaxSize(bm);
 		huffman[(unsigned char)ArvoreInfo(arv)]->bm.length =  bitmapGetLength(bm);
 		return;
 	}
 
-	CriaTabela(huffman,bm,0,ArvoreEsquerda(arv));
+	CriaTabela(huffman,bm,0,ArvoreEsquerda(arv),folhas);
 	if(direcao==2) bm = bitmapInit(SIZE_MB);
-	CriaTabela(huffman,bm,1,ArvoreDireita(arv));
+	CriaTabela(huffman,bm,1,ArvoreDireita(arv),folhas);
 
 }
 
@@ -84,11 +88,15 @@ void EscreveExtensao(char* nomeDoArquivo, FILE* saida){
 
 
 
-void GeraCompactado(Tabela** Huffman,unsigned char* bytesDoArquivo,long long unsigned int tamanhoDoArquivo,FILE* entrada,FILE* saida, bitmap cabecalho, char* nomeDoArquivo)
+void GeraCompactado(Tabela** Huffman,unsigned char* bytesDoArquivo,long long unsigned int tamanhoDoArquivo,FILE* entrada,FILE* saida, bitmap cabecalho, char* nomeDoArquivo,char* folhas)
 {
 	bitmap all = bitmapInit(SIZE_MB);
 	EscreveExtensao(nomeDoArquivo, saida);
+
+	int tamanhoCabecalho = (int)bitmapGetLength(cabecalho);
+	fwrite(&tamanhoCabecalho,sizeof(int),1,saida); 
 	fwrite(bitmapGetContents(cabecalho), sizeof(unsigned char), ProxMultiploOito(bitmapGetLength(cabecalho))/8, saida);
+	fwrite(folhas,sizeof(unsigned char),strlen(folhas),saida);
 
 	while(tamanhoDoArquivo>0)
 	{
@@ -113,8 +121,11 @@ void GeraCompactado(Tabela** Huffman,unsigned char* bytesDoArquivo,long long uns
 
 	}
 
-	fwrite(bitmapGetContents(all),sizeof(unsigned char),ProxMultiploOito(bitmapGetLength(all))/8,saida);
-
+	int tamanhoCodigo = ProxMultiploOito(bitmapGetLength(all));
+	fwrite(bitmapGetContents(all),sizeof(unsigned char),tamanhoCodigo/8,saida);
+	tamanhoCodigo-=bitmapGetLength(all);
+	fwrite(&tamanhoCodigo,sizeof(int),1,saida);
+	
 }
 
 
