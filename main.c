@@ -25,17 +25,15 @@ int main(int argc,char** argv)
 
 	long long unsigned int tamanhoDoArquivo = CalculaTamanhoArquivo(entrada);
 
-	unsigned char bytesDoArquivo[tamanhoDoArquivo];
-
-	LerArquivo(tamanhoDoArquivo,entrada,bytesDoArquivo);
-
-	FecharArquivo(entrada);
-
 	long long unsigned int frequencia[MAX_SIZE_OF_ASCII];
 
 	ZeraFrequencia(frequencia,MAX_SIZE_OF_ASCII);
 
-	VerificaFrequencia(frequencia,bytesDoArquivo,tamanhoDoArquivo);
+	unsigned char bytesDoArquivo[SIZE_MB];
+
+	LerArquivo(tamanhoDoArquivo,entrada,bytesDoArquivo,frequencia);
+
+	FecharArquivo(entrada);
 
 	lista=CriaListaVazia();
 
@@ -56,8 +54,18 @@ int main(int argc,char** argv)
 	bitmap bm = bitmapInit(SIZE_MB);
 
 	CriaTabela(Huffman,bm,2,ListaArvore(ListaPrimeiro(lista)));
+	
+	entrada =  AbrirArquivo('r',nomeArquivo);
 
-	GeraCompactado(Huffman,bytesDoArquivo,tamanhoDoArquivo);
+	VerificaArquivo(entrada);
+
+	FILE* saida = AbrirArquivo('w',"saida.txt"); //mudar para nomeArquivo.comp
+
+	VerificaArquivo(saida);
+
+	GeraCompactado(Huffman,bytesDoArquivo,tamanhoDoArquivo,entrada,saida);
+
+	FecharArquivo(saida);
 
 	return 0;
 }

@@ -38,13 +38,20 @@ long long unsigned int CalculaTamanhoArquivo(FILE* arquivo)
  
     fseek(arquivo, posicaoAtual, SEEK_SET);
  
-    return tamanho-1;
+    return tamanho;
 
 }
 
-void LerArquivo(long long unsigned int tam,FILE* arquivo,unsigned char* bytesDoArquivo)
+void LerArquivo(long long unsigned int tam,FILE* arquivo,unsigned char* bytesDoArquivo,long long unsigned int* frequencia)
 {
-	fread(bytesDoArquivo,sizeof(char),tam,arquivo);
+	while(tam>0)
+	{
+		int retorno = fread(bytesDoArquivo,sizeof(unsigned char),SIZE_MB,arquivo);
+		tam-=retorno;
+		VerificaFrequencia(frequencia,bytesDoArquivo,retorno);
+		
+	}
+	
 }
 
 void FecharArquivo(FILE* arquivo)
@@ -61,8 +68,13 @@ void VerificaFrequencia(long long unsigned int* frequencia,unsigned char* bytesD
 {
 	int i;
 	
-	for(i=0;i<tamanhoDoArquivo;i++)
-		frequencia[(int)bytesDoArquivo[i]]++;
+	for(i=0;i<tamanhoDoArquivo-1;i++)
+		frequencia[bytesDoArquivo[i]]++;
+
+	/*for(i=0;i<256;i++)
+		if(frequencia[i])
+			printf("%c %d\n",(char)i,frequencia[i]);
+	*/
 }
 void NomeArquivo(char* argv,char* nomeArquivo)
 {

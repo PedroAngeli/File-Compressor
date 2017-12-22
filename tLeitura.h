@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "tHuffman.h"
 
 
 FILE* AbrirArquivo(char c,char* nome);
@@ -14,7 +15,7 @@ void VerificaArquivo(FILE* arquivo);
 
 long long unsigned int CalculaTamanhoArquivo(FILE* arquivo);
 
-void LerArquivo(long long unsigned int tam,FILE* arquivo,unsigned char* bytesDoArquivo);
+void LerArquivo(long long unsigned int tam,FILE* arquivo,unsigned char* bytesDoArquivo,long long unsigned int* frequencia);
 
 void FecharArquivo(FILE* arquivo);
 

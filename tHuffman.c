@@ -11,29 +11,34 @@ bitmap BitMapHuffman(Tabela* Huffman)
 {
 	return Huffman->bm;
 }
+
+
 void CriaTabelaVazia(Tabela** Huffman,int tam)
 {
+ 	
 	for(int i=0;i<tam;i++)
 	{
 		Huffman[i]= (Tabela*) malloc(sizeof(Tabela));
-		Huffman[i]->bm = bitmapInit(20);
+		Huffman[i]->bm = bitmapInit(SIZE_MB);
 		Huffman[i]->c=(char)i;
 	}
-
+	
 }
 
 void CriaTabela(Tabela** huffman,bitmap bm,int direcao,Arvore* arv)
 {
 
+	if(arv==NULL) return;
+
 	if(direcao==1) bitmapAppendLeastSignificantBit(&bm,'1');
 	else if(direcao==0) bitmapAppendLeastSignificantBit(&bm,'0');
 
-	if(arv==NULL) return;
-	
+
 	if(ArvoreEsquerda(arv)==NULL && ArvoreDireita(arv)==NULL)
 	{
-		huffman[(int)ArvoreInfo(arv)]->bm=bm; 
-		if(ArvoreInfo(arv)=='r') printf("%s",bitmapGetContents(bm));
+		strncpy(bitmapGetContents(huffman[(unsigned char)ArvoreInfo(arv)]->bm),bitmapGetContents(bm),bitmapGetLength(bm)+1);   
+		huffman[(unsigned char)ArvoreInfo(arv)]->bm.max_size = bitmapGetMaxSize(bm);
+		huffman[(unsigned char)ArvoreInfo(arv)]->bm.length =  bitmapGetLength(bm);
 		return;
 	}
 
@@ -66,20 +71,49 @@ void ImprimeCabecalho(bitmap cabecalho){
 	printf("%s", bitmapGetContents(cabecalho));
 }
 
-void GeraCompactado(Tabela** Huffman,unsigned char* bytesDoArquivo,long long unsigned int tamanhoDoArquivo)
+void GeraCompactado(Tabela** Huffman,unsigned char* bytesDoArquivo,long long unsigned int tamanhoDoArquivo,FILE* entrada,FILE* saida)
 {
 	bitmap all = bitmapInit(SIZE_MB);
 
-	for(int i = 0; i < tamanhoDoArquivo ; i++)
+	while(tamanhoDoArquivo>0)
 	{
-		
-		for(int j= 0;j<bitmapGetLength(Huffman[bytesDoArquivo[i]]->bm);j++)
-		{
-			
-		}
-	}
-	
+		int retorno = fread(bytesDoArquivo,sizeof(char),SIZE_MB,entrada);	
+		tamanhoDoArquivo-=retorno;
 
+		for(int i=0;i<retorno-1;i++)
+		{
+			for(int j=0;j<bitmapGetLength(Huffman[bytesDoArquivo[i]]->bm);j++)
+			{
+				if(bitmapGetLength(all) < SIZE_MB)
+					bitmapAppendLeastSignificantBit(&all,bitmapGetBit(Huffman[bytesDoArquivo[i]]->bm,j));
+				
+				else
+				{
+					fwrite(bitmapGetContents(all),sizeof(unsigned char),bitmapGetLength(all),saida);
+					bitmap all = bitmapInit(SIZE_MB);
+					bitmapAppendLeastSignificantBit(&all,bitmapGetBit(Huffman[bytesDoArquivo[i]]->bm,j));
+				}
+			}
+		}
+
+	}
+
+	
+	printf("%d\n",bitmapGetLength(all));
+	fwrite(bitmapGetContents(all),sizeof(unsigned char),ProxMultiploOito(bitmapGetLength(all))/8,saida);
+
+}
+
+
+unsigned int ProxMultiploOito(unsigned int tam){
+	int i;	
+	for(i = tam; i < tam+9; i++){
+		if(i%8 == 0){
+			break;
+		}
+	}	
+	return i;
+	
 }
 
 

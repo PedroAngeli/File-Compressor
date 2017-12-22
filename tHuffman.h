@@ -8,7 +8,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define SIZE_MB 80000000
+#define SIZE_MB 8000000
 
 typedef struct tabela Tabela;
 
@@ -26,5 +26,8 @@ void CriaTabelaVazia(Tabela** Huffman,int tam);
 
 bitmap BitMapHuffman(Tabela* Huffman);
 
-void GeraCompactado(Huffman,bytesDoArquivo,tamanhoDoArquivo);
+void GeraCompactado(Tabela** Huffman,unsigned char* bytesDoArquivo,long long unsigned int tamanhoDoArquivo,FILE* entrada,FILE* saida);
+
+unsigned int ProxMultiploOito(unsigned int tam);
+
 #endif
