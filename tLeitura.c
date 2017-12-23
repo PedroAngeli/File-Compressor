@@ -30,14 +30,14 @@ void VerificaArquivo(FILE* arquivo)
 long long unsigned int CalculaTamanhoArquivo(FILE* arquivo)
 {
     long long unsigned int posicaoAtual = ftell(arquivo);
- 
+
     long long unsigned int tamanho;
- 
+
     fseek(arquivo, 0, SEEK_END);
     tamanho = ftell(arquivo);
- 
+
     fseek(arquivo, posicaoAtual, SEEK_SET);
- 
+
     return tamanho;
 
 }
@@ -49,9 +49,9 @@ void LerArquivo(long long unsigned int tam,FILE* arquivo,unsigned char* bytesDoA
 		int retorno = fread(bytesDoArquivo,sizeof(unsigned char),SIZE_MB,arquivo);
 		tam-=retorno;
 		VerificaFrequencia(frequencia,bytesDoArquivo,retorno);
-		
+
 	}
-	
+
 }
 
 void FecharArquivo(FILE* arquivo)
@@ -67,7 +67,7 @@ void ZeraFrequencia(long long unsigned int* frequencia,int tam)
 void VerificaFrequencia(long long unsigned int* frequencia,unsigned char* bytesDoArquivo,long long unsigned int tamanhoDoArquivo)
 {
 	int i;
-	
+
 	for(i=0;i<tamanhoDoArquivo-1;i++)
 		frequencia[bytesDoArquivo[i]]++;
 
@@ -98,42 +98,104 @@ void LerFormato(char* formato,FILE* entrada)
 	fscanf(entrada,"%*c");
 }
 
-void LeCabecalho(FILE* entrada,int tamanhoAparente)
-{
-	int tamanhoReal = ProxMultiploOito(tamanhoAparente);
-	int tamanhoLixo = tamanhoReal - tamanhoAparente;
+int ObtemQuantidadeDeFolhasCabecalho(char* cabecalho, int tam){
+	int count = 0, i;
+	for(i = 0; i < tam; i++){
+		if(cabecalho[i] == 1)
+			count++;
+	}
+	return count;
+}
 
-	bitmap cabecalho = bitmapInit(tamanhoReal);
+void GeraDescompactado(FILE* entrada,int tamanhoAparenteCabecalho)
+{
+	int tamanhoRealCabecalho = ProxMultiploOito(tamanhoAparenteCabecalho);
+	int tamanhoLixoCabecalho = tamanhoRealCabecalho - tamanhoAparenteCabecalho;
+
+	bitmap cabecalho = bitmapInit(tamanhoRealCabecalho);
 	bitmap aux;
 	int contador = 0;
-	
-	int vezes = (tamanhoAparente/8)+1;
-	
+
+	int vezes = (tamanhoAparenteCabecalho/8)+1;
+
 	while(contador < vezes)
 	{
 		aux = bitmapInit(8);
 
 		fscanf(entrada,"%c",&aux.contents[0]);
-		
+
 		aux.length=8;
-		
+
 		if(contador != vezes-1) for(int i=0;i<8;i++) bitmapAppendLeastSignificantBit(&cabecalho, bitmapGetBit(aux,i));
-		
+
 			contador++;
 	}
-	for(int i=0;i<8-tamanhoLixo;i++)
+	for(int i=0;i<8-tamanhoLixoCabecalho;i++)
 		bitmapAppendLeastSignificantBit(&cabecalho, bitmapGetBit(aux,i));
-	
-	unsigned char Cabecalho[tamanhoReal+1];
+
+	unsigned char Cabecalho[tamanhoRealCabecalho+1];
 
 	//printf("%s",cabecalho.contents);
 	int j=0;
 	for(;j<cabecalho.length;j++)
 	{
-		printf("%d",bitmapGetBit(cabecalho,j));
+		printf("%d", bitmapGetBit(cabecalho,j));
 		Cabecalho[j]=bitmapGetBit(cabecalho,j);
 	}
 
-	
+	//cria vetor com as folhas
+	int qntfolhas = ObtemQuantidadeDeFolhasCabecalho(Cabecalho, tamanhoAparenteCabecalho);
+	printf("qntfolhas:%d", qntfolhas);
+	char folhas[qntfolhas+1];
+	int i = 0;
+	for(i = 0; i < qntfolhas; i++){
+	  fscanf(entrada,"%c", folhas+i);
+		printf("%c", folhas[i]);
+	}
+
+	Arvore* arvoreDeCodigo = CriaArvoreDescompactada(Cabecalho, folhas);
+	ImprimeArvore(arvoreDeCodigo);
+
+
+	long int tamanhoLixoCodigo;
+	long int inicioDoCodigo = ftell(entrada);
+
+	//Obtem tamanho do lixo do codigo, posicionado no final do arquivo
+	fseek(entrada, -1, SEEK_END);
+	fscanf(entrada, "%ld", &tamanhoLixoCodigo);
+	tamanhoLixoCodigo-='0';
+	long int finalDoCodigo = ftell(entrada);
+
+	long int tamanhoRealCodigo = finalDoCodigo-inicioDoCodigo;
+	long int tamanhoAparenteCodigo = tamanhoRealCodigo-tamanhoLixoCodigo;
+
+	/*
+	int contadorTotal = 0;
+	int contadorPercorre = TamanhoMaxArvore;
+	int vezes = (tamanhoAparenteCabecalho/8)+1;
+	TamanhoMaxArvore = ProxMultiploOito(15);
+	bitmap ant = bitmapInit(TamanhoMaxArvore*2);
+	while(contadorTotal < vezes)
+	{
+		bitmap streamDeCodigo = bitmapInit(TamanhoMaxArvore*2);
+		for(int i=contadorPercorre;i<ant.length-contadorPercorre;i++)
+		{
+			bitmapAppendLeastSignificantBit(&streamDeCodigo, bitmapGetBit(ant,i));
+		}
+
+		fread(bitmapGetContents(temporario), 1, TamanhoMaxArvore/8, entrada);
+		for(i=0;i<TamanhoMaxArvore;)
+		aux.length=TamanhoMaxArvore;
+
+		aux2 = bitmapInit(16);
+		fread(bitmapGetContents(temporario), 1, TamanhoMaxArvore/8-(streamDeCodigo.length), entrada);
+		PercorreArvore(arvoreDeCodigo, &contador);
+
+
+		contador++;
+	}
+	*/
+
+
 
 }

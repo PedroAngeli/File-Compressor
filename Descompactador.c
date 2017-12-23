@@ -26,7 +26,7 @@ int main(int argc,char** argv)
 
 	fread(&tamanhoCabecalho,sizeof(int),1,entrada);
 
-	LeCabecalho(entrada,tamanhoCabecalho);
+	GeraDescompactado(entrada,tamanhoCabecalho);
 
 	return 0;
 }

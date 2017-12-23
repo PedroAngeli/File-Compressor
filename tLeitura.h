@@ -31,6 +31,8 @@ void VerificaAcao(int argc);
 
 void LerFormato(char* formato,FILE* entrada);
 
-void LeCabecalho(FILE* entrada,int tamanhoAparente);
+int ObtemQuantidadeDeFolhasCabecalho(char* cabecalho, int tam);
+
+void GeraDescompactado(FILE* entrada,int tamanhoAparente);
 
 #endif

@@ -26,4 +26,7 @@ char* GeraStringCabecalho(Arvore* arv, char* header, char* value);
 Arvore* ArvoreEsquerda(Arvore* arv);
 
 Arvore* ArvoreDireita(Arvore* arv);
+
+Arvore* CriaArvoreDescompactada(char* cabecalho, char* folhas);
+
 #endif

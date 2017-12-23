@@ -1,4 +1,5 @@
 #include "tArvore.h"
+#include "bitmap.h"
 #include <string.h>
 #include <stdio.h>
 
@@ -14,7 +15,6 @@ struct arvore
 Arvore* CriaArvore(Arvore* esq,Arvore* dir,int valor,char info)
 {
 	Arvore* arv = (Arvore*) malloc(sizeof(Arvore));
-
 	arv->esquerda=esq;
 	arv->direita=dir;
 	arv->valor=valor;
@@ -69,10 +69,40 @@ void ImprimeArvore(Arvore *arv){
 	Arvore* p = arv;
 	printf("<");
 	if(p != NULL){
-		printf("(%c:%d)", p->info, p->valor);
+		printf(" %c ", p->info);
 		ImprimeArvore(p->esquerda);
 		ImprimeArvore(p->direita);
 	}
 	printf(">");
 }
 
+int contadorDoCabecalho = -1;
+int contadorDeFolhas = 0;
+Arvore* CriaArvoreDescompactada(char* cabecalho, char* folhas){
+	//preordem
+	contadorDoCabecalho++;
+	if((int)cabecalho[contadorDoCabecalho] == 1){
+		Arvore* folha = CriaArvore(NULL, NULL, 0, folhas[contadorDeFolhas]);
+		contadorDeFolhas++;
+		return folha;
+	}
+	Arvore* esq = CriaArvoreDescompactada(cabecalho, folhas);
+	Arvore* dir = CriaArvoreDescompactada(cabecalho, folhas);
+	Arvore* no = CriaArvore(esq, dir, 0, '\0');
+	return no;
+}
+
+char PercorreArvore(Arvore* arv, bitmap codigo,  int* pos){
+	Arvore* p = arv;
+	if(p != NULL)
+	{
+			if(p->esquerda != NULL && p->direita != NULL)
+					return p->info;
+			char cod = bitmapGetBit(codigo, *pos);
+			if(cod == 0)
+				PercorreArvore(arv->esquerda, codigo, pos);
+			else if(cod == 1)
+				PercorreArvore(arv->direita, codigo, pos);
+			*pos++;
+	}
+}
