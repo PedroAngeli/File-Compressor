@@ -96,13 +96,19 @@ char PercorreArvore(Arvore* arv, bitmap codigo,  int* pos){
 	Arvore* p = arv;
 	if(p != NULL)
 	{
-			if(p->esquerda != NULL && p->direita != NULL)
+			if(p->esquerda == NULL && p->direita == NULL){
+					//printf("|%c| ", p->info);
 					return p->info;
+			}
+			printf("|Travou no pos:%d|", (*pos)+1);
 			char cod = bitmapGetBit(codigo, *pos);
+			//printf("|%d:pos:%d|", cod, *pos);
+			(*pos)++;
+
 			if(cod == 0)
-				PercorreArvore(arv->esquerda, codigo, pos);
+				return PercorreArvore(arv->esquerda, codigo, pos);
 			else if(cod == 1)
-				PercorreArvore(arv->direita, codigo, pos);
-			*pos++;
+				return PercorreArvore(arv->direita, codigo, pos);
+
 	}
 }

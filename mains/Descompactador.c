@@ -26,7 +26,7 @@ int main(int argc,char** argv)
 
 	fread(&tamanhoCabecalho,sizeof(int),1,entrada);
 
-	GeraDescompactado(entrada,tamanhoCabecalho);
+	GeraDescompactado(entrada,tamanhoCabecalho, nomeArquivo, formato);
 
 	return 0;
 }

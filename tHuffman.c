@@ -15,14 +15,14 @@ bitmap BitMapHuffman(Tabela* Huffman)
 
 void CriaTabelaVazia(Tabela** Huffman,int tam)
 {
- 	
+
 	for(int i=0;i<tam;i++)
 	{
 		Huffman[i]= (Tabela*) malloc(sizeof(Tabela));
 		Huffman[i]->bm = bitmapInit(SIZE_MB);
 		Huffman[i]->c=(char)i;
 	}
-	
+
 }
 
 int count=0;
@@ -40,7 +40,7 @@ void CriaTabela(Tabela** huffman,bitmap bm,int direcao,Arvore* arv,char* folhas)
 	{
 		folhas[count] = ArvoreInfo(arv);
 		count++;
-		strncpy(bitmapGetContents(huffman[(unsigned char)ArvoreInfo(arv)]->bm),bitmapGetContents(bm),bitmapGetLength(bm));   
+		strncpy(bitmapGetContents(huffman[(unsigned char)ArvoreInfo(arv)]->bm),bitmapGetContents(bm),bitmapGetLength(bm));
 		huffman[(unsigned char)ArvoreInfo(arv)]->bm.max_size = bitmapGetMaxSize(bm);
 		huffman[(unsigned char)ArvoreInfo(arv)]->bm.length =  bitmapGetLength(bm);
 		return;
@@ -61,22 +61,22 @@ void CriaCabecalho(bitmap* cabecalho,Arvore* arv)
 		bitmapAppendLeastSignificantBit(cabecalho,'1');
 		return;
 	}
-	 
+
 	bitmapAppendLeastSignificantBit(cabecalho,'0');
 
 	CriaCabecalho(cabecalho,ArvoreEsquerda(arv));
-	
+
 
 	CriaCabecalho(cabecalho,ArvoreDireita(arv));
-		
+
 }
 
 void EscreveExtensao(char* nomeDoArquivo, FILE* saida){
-	int i, TemPonto = 0;	
+	int i, TemPonto = 0;
 	for(i = 0; i < strlen(nomeDoArquivo); i++){
 		if(nomeDoArquivo[i] == '.'){
 			TemPonto = 1;
-			i++;			
+			i++;
 			break;
 		}
 	}
@@ -94,13 +94,13 @@ void GeraCompactado(Tabela** Huffman,unsigned char* bytesDoArquivo,long long uns
 	EscreveExtensao(nomeDoArquivo, saida);
 
 	int tamanhoCabecalho = (int)bitmapGetLength(cabecalho);
-	fwrite(&tamanhoCabecalho,sizeof(int),1,saida); 
+	fwrite(&tamanhoCabecalho,sizeof(int),1,saida);
 	fwrite(bitmapGetContents(cabecalho), sizeof(unsigned char), ProxMultiploOito(bitmapGetLength(cabecalho))/8, saida);
 	fwrite(folhas,sizeof(unsigned char),strlen(folhas),saida);
 
 	while(tamanhoDoArquivo>0)
 	{
-		int retorno = fread(bytesDoArquivo,sizeof(char),SIZE_MB,entrada);	
+		int retorno = fread(bytesDoArquivo,sizeof(char),SIZE_MB,entrada);
 		tamanhoDoArquivo-=retorno;
 
 		for(int i=0;i<retorno-1;i++)
@@ -109,7 +109,7 @@ void GeraCompactado(Tabela** Huffman,unsigned char* bytesDoArquivo,long long uns
 			{
 				if(bitmapGetLength(all) < SIZE_MB)
 					bitmapAppendLeastSignificantBit(&all,bitmapGetBit(Huffman[bytesDoArquivo[i]]->bm,j));
-				
+
 				else
 				{
 					fwrite(bitmapGetContents(all),sizeof(unsigned char),bitmapGetLength(all),saida);
@@ -124,20 +124,20 @@ void GeraCompactado(Tabela** Huffman,unsigned char* bytesDoArquivo,long long uns
 	int tamanhoCodigo = ProxMultiploOito(bitmapGetLength(all));
 	fwrite(bitmapGetContents(all),sizeof(unsigned char),tamanhoCodigo/8,saida);
 	tamanhoCodigo-=bitmapGetLength(all);
-	fwrite(&tamanhoCodigo,sizeof(int),1,saida);
-	
+	fwrite(&tamanhoCodigo,sizeof(unsigned char),1,saida);
+
 }
 
 
 unsigned int ProxMultiploOito(unsigned int tam){
-	int i;	
+	int i;
 	for(i = tam; i < tam+9; i++){
 		if(i%8 == 0){
 			break;
 		}
-	}	
+	}
 	return i;
-	
+
 }
 
 
@@ -156,7 +156,7 @@ void IteraHuffman(Lista* lista)
 			ModificaPrimeiro(lista, ListaProx(ListaProx(p)));
 			free(ListaProx(p));
 			free(p);
-			
+
 		}
-	
+
 }

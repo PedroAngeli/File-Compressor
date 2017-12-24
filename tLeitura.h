@@ -33,6 +33,10 @@ void LerFormato(char* formato,FILE* entrada);
 
 int ObtemQuantidadeDeFolhasCabecalho(char* cabecalho, int tam);
 
-void GeraDescompactado(FILE* entrada,int tamanhoAparente);
+void ObtemNomeSemExtensao(char* nomeDoArquivo, char* nomeSaida);
+
+void GeraDescompactado(FILE* entrada,int tamanhoAparenteCabecalho, char* nomeArquivo, char* formato);
+
+
 
 #endif

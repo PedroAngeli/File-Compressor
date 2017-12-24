@@ -1,6 +1,6 @@
 #include "tLeitura.h"
-
-
+#include "tArvore.h"
+#define SIZE_MB 8000000
 FILE* AbrirArquivo(char c,char* nome)
 {
 	if(c=='r')
@@ -68,7 +68,7 @@ void VerificaFrequencia(long long unsigned int* frequencia,unsigned char* bytesD
 {
 	int i;
 
-	for(i=0;i<tamanhoDoArquivo-1;i++)
+	for(i=0;i<tamanhoDoArquivo;i++)
 		frequencia[bytesDoArquivo[i]]++;
 
 }
@@ -107,8 +107,38 @@ int ObtemQuantidadeDeFolhasCabecalho(char* cabecalho, int tam){
 	return count;
 }
 
-void GeraDescompactado(FILE* entrada,int tamanhoAparenteCabecalho)
+
+void ObtemNomeSemExtensao(char* nomeDoArquivo, char* nomeSaida){
+	int i, len = strlen(nomeDoArquivo);
+	for(i = 0; i < len; i++){
+		nomeSaida[i]=nomeDoArquivo[i];
+		if(nomeDoArquivo[i] == '.'){
+			break;
+		}
+	}
+	nomeSaida[i]= '\0';
+}
+
+char* CriaStringChar(char c, char* str){
+	str[0] = c;
+	str[1] = '\0';
+	return str;
+}
+
+
+
+
+void GeraDescompactado(FILE* entrada,int tamanhoAparenteCabecalho, char* nomeArquivo, char* formato)
 {
+	char nomeSaida[1000];
+	ObtemNomeSemExtensao(nomeArquivo, nomeSaida);
+	if(strcmp(formato, "")){
+	strcat(nomeSaida, ".");
+	strcat(nomeSaida, formato);
+	}
+	printf("Saida: %s\n", nomeSaida);
+	FILE* saida = AbrirArquivo('w', nomeSaida);
+
 	int tamanhoRealCabecalho = ProxMultiploOito(tamanhoAparenteCabecalho);
 	int tamanhoLixoCabecalho = tamanhoRealCabecalho - tamanhoAparenteCabecalho;
 
@@ -158,44 +188,56 @@ void GeraDescompactado(FILE* entrada,int tamanhoAparenteCabecalho)
 
 
 	long int tamanhoLixoCodigo;
+	long int tamanhoRealCodigo;
+	long int tamanhoAparenteCodigo;
 	long int inicioDoCodigo = ftell(entrada);
-
+	printf("inicioDoCodigo: %d\n", inicioDoCodigo);
 	//Obtem tamanho do lixo do codigo, posicionado no final do arquivo
-	fseek(entrada, -1, SEEK_END);
-	fscanf(entrada, "%ld", &tamanhoLixoCodigo);
-	tamanhoLixoCodigo-='0';
+	fseek(entrada, 0, SEEK_END);
 	long int finalDoCodigo = ftell(entrada);
+	printf("finalDoCodigo: %d\n", finalDoCodigo);
+	fseek(entrada, finalDoCodigo-1, SEEK_SET);
+	fread(&tamanhoLixoCodigo, sizeof(char), 1, entrada);
+	printf("TamanhoLIXO: %d\n", tamanhoLixoCodigo);
+	fseek(entrada, inicioDoCodigo, SEEK_SET);
 
-	long int tamanhoRealCodigo = finalDoCodigo-inicioDoCodigo;
-	long int tamanhoAparenteCodigo = tamanhoRealCodigo-tamanhoLixoCodigo;
+	tamanhoRealCodigo = (finalDoCodigo-inicioDoCodigo-1)*8;
+	tamanhoAparenteCodigo = tamanhoRealCodigo-tamanhoLixoCodigo;
 
-	/*
-	int contadorTotal = 0;
-	int contadorPercorre = TamanhoMaxArvore;
-	int vezes = (tamanhoAparenteCabecalho/8)+1;
-	TamanhoMaxArvore = ProxMultiploOito(15);
-	bitmap ant = bitmapInit(TamanhoMaxArvore*2);
-	while(contadorTotal < vezes)
+
+	printf("TamanhoReal: %d\n", tamanhoRealCodigo);
+	printf("tamanhoAparenteCodigo: %d\n", tamanhoAparenteCodigo );
+	bitmap codigoFinal = bitmapInit(tamanhoRealCodigo);
+	fread(codigoFinal.contents, sizeof(char), tamanhoRealCodigo/8, entrada);
+	codigoFinal.length = tamanhoAparenteCodigo;
+	printf("MAXSIZE:%d LENGTH:%d\n", codigoFinal.max_size, codigoFinal.length);
+	/*for(i=0;i<codigoFinal.length;i++){
+		printf("%d", bitmapGetBit(codigoFinal, i));
+	}*/
+
+	int iterador = 0;
+	char streamDeCodigo[SIZE_MB];
+	streamDeCodigo[0] = '\0';
+	int qntIteracoes = tamanhoAparenteCodigo;
+
+	while(iterador < qntIteracoes)
 	{
-		bitmap streamDeCodigo = bitmapInit(TamanhoMaxArvore*2);
-		for(int i=contadorPercorre;i<ant.length-contadorPercorre;i++)
-		{
-			bitmapAppendLeastSignificantBit(&streamDeCodigo, bitmapGetBit(ant,i));
+		printf("iterador: %d\n", iterador);
+		if(iterador != 0 && iterador%SIZE_MB == 0){
+			fwrite(streamDeCodigo, sizeof(char), SIZE_MB, saida);
+			streamDeCodigo[0] = '\0';
 		}
+		char buffer = PercorreArvore(arvoreDeCodigo, codigoFinal, &iterador);
+		char temp[2];
+		CriaStringChar(buffer, temp);
+		strcat(streamDeCodigo, temp);
 
-		fread(bitmapGetContents(temporario), 1, TamanhoMaxArvore/8, entrada);
-		for(i=0;i<TamanhoMaxArvore;)
-		aux.length=TamanhoMaxArvore;
-
-		aux2 = bitmapInit(16);
-		fread(bitmapGetContents(temporario), 1, TamanhoMaxArvore/8-(streamDeCodigo.length), entrada);
-		PercorreArvore(arvoreDeCodigo, &contador);
-
-
-		contador++;
 	}
-	*/
-
+	if(tamanhoAparenteCodigo-iterador<SIZE_MB){
+		printf("iterador: %d\n", iterador);
+		printf("streamDeCodigo:%s|size:%d|\n", streamDeCodigo, strlen(streamDeCodigo));
+		fwrite(streamDeCodigo, sizeof(char), strlen(streamDeCodigo), saida);
+	}
 
 
 }

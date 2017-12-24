@@ -9,7 +9,7 @@
 int main(int argc,char** argv)
 {
 	char nomeArquivo[100];
-	
+
 	Lista* lista;
 
 	VerificaParametro(argc);
@@ -53,12 +53,15 @@ int main(int argc,char** argv)
 	char folhas[MAX_SIZE_OF_ASCII];
 
 	CriaTabela(Huffman,bm,2,ListaArvore(ListaPrimeiro(lista)),folhas);
-	
+
 	entrada =  AbrirArquivo('r',nomeArquivo);
 
 	VerificaArquivo(entrada);
 
-	FILE* saida = AbrirArquivo('w',"saida.txt"); //mudar para nomeArquivo.comp
+	char nomeSaida[1000];
+	ObtemNomeSemExtensao(nomeArquivo, nomeSaida);
+	strcat(nomeSaida, ".comp");
+	FILE* saida = AbrirArquivo('w', nomeSaida);
 
 	VerificaArquivo(saida);
 
@@ -66,6 +69,6 @@ int main(int argc,char** argv)
 
 	FecharArquivo(saida);
 
-	
+
 	return 0;
 }

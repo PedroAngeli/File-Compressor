@@ -2,6 +2,7 @@
 #define TARVORE_H
 
 #include <stdlib.h>
+#include "bitmap.h"
 
 typedef struct arvore Arvore;
 
@@ -28,5 +29,7 @@ Arvore* ArvoreEsquerda(Arvore* arv);
 Arvore* ArvoreDireita(Arvore* arv);
 
 Arvore* CriaArvoreDescompactada(char* cabecalho, char* folhas);
+
+char PercorreArvore(Arvore* arv, bitmap codigo,  int* pos);
 
 #endif
