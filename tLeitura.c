@@ -1,5 +1,8 @@
 #include "tLeitura.h"
 #include "tArvore.h"
+#include "PrintaArvore.h"
+#include "tHuffman.h"
+
 #define SIZE_MB 8000000
 FILE* AbrirArquivo(char c,char* nome)
 {
@@ -139,53 +142,51 @@ void GeraDescompactado(FILE* entrada,int tamanhoAparenteCabecalho, char* nomeArq
 	printf("Saida: %s\n", nomeSaida);
 	FILE* saida = AbrirArquivo('w', nomeSaida);
 
-	int tamanhoRealCabecalho = ProxMultiploOito(tamanhoAparenteCabecalho);
+	/*int tamanhoRealCabecalho = ProxMultiploOito(tamanhoAparenteCabecalho);
 	int tamanhoLixoCabecalho = tamanhoRealCabecalho - tamanhoAparenteCabecalho;
 
 	bitmap cabecalho = bitmapInit(tamanhoRealCabecalho);
 	bitmap aux;
-	int contador = 0;
+
 
 	int vezes = (tamanhoAparenteCabecalho/8)+1;
-
-	while(contador < vezes)
+	*/
+	int contador = 0;
+	char cabecalho[tamanhoAparenteCabecalho+1];
+	while(contador < tamanhoAparenteCabecalho)
 	{
-		aux = bitmapInit(8);
-
-		fscanf(entrada,"%c",&aux.contents[0]);
-
-		aux.length=8;
-
-		if(contador != vezes-1) for(int i=0;i<8;i++) bitmapAppendLeastSignificantBit(&cabecalho, bitmapGetBit(aux,i));
-
-			contador++;
+		fscanf(entrada,"%c", &cabecalho[contador]);
+		printf("|%d|", cabecalho[contador]);
+		contador++;
 	}
-	for(int i=0;i<8-tamanhoLixoCabecalho;i++)
-		bitmapAppendLeastSignificantBit(&cabecalho, bitmapGetBit(aux,i));
+	cabecalho[contador] = '\0';
 
-	unsigned char Cabecalho[tamanhoRealCabecalho+1];
-
-	//printf("%s",cabecalho.contents);
-	int j=0;
-	for(;j<cabecalho.length;j++)
-	{
-		printf("%d", bitmapGetBit(cabecalho,j));
-		Cabecalho[j]=bitmapGetBit(cabecalho,j);
-	}
+	printf("\nCabecalho(%d:%d): ", contador, tamanhoAparenteCabecalho);
+	for(int i= 0 ; i < tamanhoAparenteCabecalho; i++)
+		printf("%d",cabecalho[i]);
+	printf("\n");
 
 	//cria vetor com as folhas
-	int qntfolhas = ObtemQuantidadeDeFolhasCabecalho(Cabecalho, tamanhoAparenteCabecalho);
+	int qntfolhas = ObtemQuantidadeDeFolhasCabecalho(cabecalho, tamanhoAparenteCabecalho);
+
 	printf("qntfolhas:%d", qntfolhas);
 	char folhas[qntfolhas+1];
 	int i = 0;
 	for(i = 0; i < qntfolhas; i++){
 	  fscanf(entrada,"%c", folhas+i);
-		printf("%c", folhas[i]);
+		printf("%03d ", folhas[i]);
 	}
 
-	Arvore* arvoreDeCodigo = CriaArvoreDescompactada(Cabecalho, folhas);
-	ImprimeArvore(arvoreDeCodigo);
+	int contadorFolhas = 0;
+	Arvore* arvoreDeCodigo = CriaArvoreDescompactada(cabecalho, folhas);
+	print_t(arvoreDeCodigo);
+	ObtemFolhasDaArvore(arvoreDeCodigo, folhas, &contadorFolhas);
 
+	printf("\nPrimeiraFolha: %03d\n", folhas[0]);
+	printf("\n");
+	for(int i = 0; i < contadorFolhas; i++)
+		printf("%03d ", folhas[i]);
+	printf("\n");
 
 	long int tamanhoLixoCodigo;
 	long int tamanhoRealCodigo;
@@ -211,30 +212,32 @@ void GeraDescompactado(FILE* entrada,int tamanhoAparenteCabecalho, char* nomeArq
 	fread(codigoFinal.contents, sizeof(char), tamanhoRealCodigo/8, entrada);
 	codigoFinal.length = tamanhoAparenteCodigo;
 	printf("MAXSIZE:%d LENGTH:%d\n", codigoFinal.max_size, codigoFinal.length);
-	/*for(i=0;i<codigoFinal.length;i++){
+	for(i=0;i<codigoFinal.length;i++){
 		printf("%d", bitmapGetBit(codigoFinal, i));
-	}*/
+	}
+	printf("\n");
 
 	int iterador = 0;
+	int countCodigo = 0;
 	char streamDeCodigo[SIZE_MB];
 	streamDeCodigo[0] = '\0';
 	int qntIteracoes = tamanhoAparenteCodigo;
 
 	while(iterador < qntIteracoes)
 	{
-		printf("iterador: %d\n", iterador);
-		if(iterador != 0 && iterador%SIZE_MB == 0){
+		//printf("iterador: %d\n", iterador);
+		if(countCodigo != 0 && countCodigo%SIZE_MB == 0){
 			fwrite(streamDeCodigo, sizeof(char), SIZE_MB, saida);
 			streamDeCodigo[0] = '\0';
+			countCodigo = 0;
 		}
 		char buffer = PercorreArvore(arvoreDeCodigo, codigoFinal, &iterador);
-		char temp[2];
-		CriaStringChar(buffer, temp);
-		strcat(streamDeCodigo, temp);
+		printf("buffer:%c; count:%d\n", buffer, countCodigo);
+		streamDeCodigo[countCodigo++] = buffer;
 
 	}
 	if(tamanhoAparenteCodigo-iterador<SIZE_MB){
-		printf("iterador: %d\n", iterador);
+		//printf("iterador: %d\n", iterador);
 		printf("streamDeCodigo:%s|size:%d|\n", streamDeCodigo, strlen(streamDeCodigo));
 		fwrite(streamDeCodigo, sizeof(char), strlen(streamDeCodigo), saida);
 	}

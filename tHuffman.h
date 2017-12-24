@@ -32,4 +32,6 @@ void GeraCompactado(Tabela** Huffman,unsigned char* bytesDoArquivo,long long uns
 
 unsigned int ProxMultiploOito(unsigned int tam);
 
+void ObtemFolhasDaArvore(Arvore* arv, char* folhas, int* contador);
+
 #endif

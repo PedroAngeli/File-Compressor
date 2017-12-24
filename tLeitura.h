@@ -37,6 +37,6 @@ void ObtemNomeSemExtensao(char* nomeDoArquivo, char* nomeSaida);
 
 void GeraDescompactado(FILE* entrada,int tamanhoAparenteCabecalho, char* nomeArquivo, char* formato);
 
-
+char* CriaStringChar(char c, char* str);
 
 #endif

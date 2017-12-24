@@ -1,5 +1,5 @@
 #include "tHuffman.h"
-
+#include "tLeitura.h"
 
 struct tabela
 {
@@ -39,10 +39,22 @@ void CriaTabela(Tabela** huffman,bitmap bm,int direcao,Arvore* arv,char* folhas)
 	if(ArvoreEsquerda(arv)==NULL && ArvoreDireita(arv)==NULL)
 	{
 		folhas[count] = ArvoreInfo(arv);
+
+
+
+
+
+
 		count++;
 		strncpy(bitmapGetContents(huffman[(unsigned char)ArvoreInfo(arv)]->bm),bitmapGetContents(bm),bitmapGetLength(bm));
 		huffman[(unsigned char)ArvoreInfo(arv)]->bm.max_size = bitmapGetMaxSize(bm);
 		huffman[(unsigned char)ArvoreInfo(arv)]->bm.length =  bitmapGetLength(bm);
+
+		printf("\n Letra: %c %03d -> ", ArvoreInfo(arv), ArvoreInfo(arv));
+		for(int i =0; i < bm.length; i++)
+			printf("%d", bitmapGetBit(bm, i));
+		printf("\n");
+
 		return;
 	}
 
@@ -50,6 +62,23 @@ void CriaTabela(Tabela** huffman,bitmap bm,int direcao,Arvore* arv,char* folhas)
 	if(direcao==2) bm = bitmapInit(SIZE_MB);
 	CriaTabela(huffman,bm,1,ArvoreDireita(arv),folhas);
 
+}
+
+void ObtemFolhasDaArvore(Arvore* arv, char* folhas, int* contador){
+
+		if(arv==NULL) return;
+
+		if(ArvoreValor(arv)==1)
+		{
+			folhas[*contador] = ArvoreInfo(arv);
+			printf("Achou folha! %03d\n", folhas[*contador]);
+			printf("Contador:%d\n", *contador);
+			(*contador)++;
+			return;
+		}
+
+		ObtemFolhasDaArvore(ArvoreEsquerda(arv), folhas, contador);
+		ObtemFolhasDaArvore(ArvoreDireita(arv), folhas, contador);
 }
 
 void CriaCabecalho(bitmap* cabecalho,Arvore* arv)
@@ -84,6 +113,7 @@ void EscreveExtensao(char* nomeDoArquivo, FILE* saida){
 		fwrite(nomeDoArquivo+i, sizeof(unsigned char), strlen(nomeDoArquivo)-i, saida);
 	}
 	fwrite("#", sizeof(unsigned char), 1, saida);
+	printf("enttensao:%s", nomeDoArquivo+i);
 }
 
 
@@ -95,7 +125,17 @@ void GeraCompactado(Tabela** Huffman,unsigned char* bytesDoArquivo,long long uns
 
 	int tamanhoCabecalho = (int)bitmapGetLength(cabecalho);
 	fwrite(&tamanhoCabecalho,sizeof(int),1,saida);
-	fwrite(bitmapGetContents(cabecalho), sizeof(unsigned char), ProxMultiploOito(bitmapGetLength(cabecalho))/8, saida);
+	//fwrite(bitmapGetContents(cabecalho), sizeof(unsigned char), ProxMultiploOito(bitmapGetLength(cabecalho))/8, saida);
+	printf("Cabecalho: ");
+	for(int i = 0; i < cabecalho.length; i++){
+		unsigned char str[2];
+		CriaStringChar(bitmapGetBit(cabecalho, i), str);
+		fwrite(&str[0], sizeof(unsigned char), 1, saida);
+		printf("%d", str[0]);
+	}
+	printf("\nFolhas:%d\n", strlen(folhas));
+	for(int i = 0; i < strlen(folhas); i++)
+		printf("%03d ", folhas[i]);
 	fwrite(folhas,sizeof(unsigned char),strlen(folhas),saida);
 
 	while(tamanhoDoArquivo>0)
@@ -121,10 +161,13 @@ void GeraCompactado(Tabela** Huffman,unsigned char* bytesDoArquivo,long long uns
 
 	}
 
-	int tamanhoCodigo = ProxMultiploOito(bitmapGetLength(all));
+	long int tamanhoCodigo = ProxMultiploOito(bitmapGetLength(all));
+	printf("bitmapGetLength(all):%d\n", bitmapGetLength(all));
+	printf("Tamanho do codigo: %d\n", tamanhoCodigo);
 	fwrite(bitmapGetContents(all),sizeof(unsigned char),tamanhoCodigo/8,saida);
-	tamanhoCodigo-=bitmapGetLength(all);
-	fwrite(&tamanhoCodigo,sizeof(unsigned char),1,saida);
+	int tamanhoLixo = tamanhoCodigo-bitmapGetLength(all);
+	printf("Tamanho do lixo: %d\n", tamanhoLixo);
+	fwrite(&tamanhoLixo,1,1,saida);
 
 }
 
