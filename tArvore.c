@@ -12,9 +12,7 @@ struct arvore
 	int valor;
 };
 
-/* Cria uma arvore, com filhos da esquerda e da direita, valor (frequencia da letra) e info (a própria letra)
-** Pre-Condicao: Ponteiros para as duas arvores filhas (pode ser NULl), frequencia da letra e a letra.
-** Pos-Condicao: Ponteiro para uma arvore com raiz alocada. */
+
 Arvore* CriaArvore(Arvore* esq,Arvore* dir,int valor,char info)
 {
 	Arvore* arv = (Arvore*) malloc(sizeof(Arvore));
@@ -27,11 +25,7 @@ Arvore* CriaArvore(Arvore* esq,Arvore* dir,int valor,char info)
 }
 
 
-/* Funcao auxiliar no algoritmo de Huffman, aloca uma nova arvore e aponta a esquerda
-** e a direita para os argumentos, essa nova arvore possuira com frequencia (valor)
-*-* correspondente a soma das frequencias da arvores esquerda e direita.
-** Pre-Condicao: Ponteiros para as duas arvores filhas.
-** Pos-Condicao: Ponteiro para uma arvore com raiz alocada. */
+
 Arvore* CriaPai(Arvore* esq, Arvore* dir)
 {
 	int soma = ArvoreValor(esq) + ArvoreValor(dir);
@@ -39,33 +33,37 @@ Arvore* CriaPai(Arvore* esq, Arvore* dir)
 }
 
 
-/* Retorna se a arvore é vazia.
-** Pre-Condicao: Ponteiro para Arvore.
-** Pos-Condicao: inteiro representando verdadadeiro ou falso */
+
 int ArvoreVazia(Arvore* arv)
 {
 	return (arv == NULL);
 }
+
 
 int ArvoreValor(Arvore* arv)
 {
 	return arv->valor;
 }
 
+
+
 char ArvoreInfo(Arvore* arv)
 {
 	return arv->info;
 }
+
 
 Arvore* ArvoreEsquerda(Arvore* arv)
 {
 	return arv->esquerda;
 }
 
+
 Arvore* ArvoreDireita(Arvore* arv)
 {
 	return arv->direita;
 }
+
 
 int TamanhoArvore(Arvore* arv){
 	int i = 0;
@@ -78,6 +76,7 @@ int TamanhoArvore(Arvore* arv){
 	return i;
 }
 
+
 void ImprimeArvore(Arvore *arv){
 	Arvore* p = arv;
 	printf("<");
@@ -88,6 +87,8 @@ void ImprimeArvore(Arvore *arv){
 	}
 	printf(">");
 }
+
+
 
 int contadorDoCabecalho = -1;
 int contadorDeFolhas = 0;
@@ -111,6 +112,9 @@ Arvore* CriaArvoreDescompactada(char* cabecalho, char* folhas){
 	// print_t(no);
 	return no;
 }
+
+
+
 
 char PercorreArvore(Arvore* arv, bitmap codigo,  int* pos){
 	Arvore* p = arv;

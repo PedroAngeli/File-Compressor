@@ -1,11 +1,14 @@
 #include "tHuffman.h"
 #include "tLeitura.h"
+#include "PrintaArvore.h"
 
 struct tabela
 {
 	char c;
 	bitmap bm;
 };
+
+
 
 bitmap BitMapHuffman(Tabela* Huffman)
 {
@@ -25,8 +28,9 @@ void CriaTabelaVazia(Tabela** Huffman,int tam)
 
 }
 
-int count=0;
 
+
+int count=0;
 void CriaTabela(Tabela** huffman,bitmap bm,int direcao,Arvore* arv,char* folhas)
 {
 
@@ -64,6 +68,8 @@ void CriaTabela(Tabela** huffman,bitmap bm,int direcao,Arvore* arv,char* folhas)
 
 }
 
+
+
 void ObtemFolhasDaArvore(Arvore* arv, char* folhas, int* contador){
 
 		if(arv==NULL) return;
@@ -80,6 +86,8 @@ void ObtemFolhasDaArvore(Arvore* arv, char* folhas, int* contador){
 		ObtemFolhasDaArvore(ArvoreEsquerda(arv), folhas, contador);
 		ObtemFolhasDaArvore(ArvoreDireita(arv), folhas, contador);
 }
+
+
 
 void CriaCabecalho(bitmap* cabecalho,Arvore* arv)
 {
@@ -99,6 +107,8 @@ void CriaCabecalho(bitmap* cabecalho,Arvore* arv)
 	CriaCabecalho(cabecalho,ArvoreDireita(arv));
 
 }
+
+
 
 void EscreveExtensao(char* nomeDoArquivo, FILE* saida){
 	int i, TemPonto = 0;
@@ -201,5 +211,6 @@ void IteraHuffman(Lista* lista)
 			free(p);
 
 		}
+		print_t(arv);
 
 }
