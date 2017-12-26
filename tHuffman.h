@@ -123,4 +123,8 @@ void PrintaBitMapHuffman(Tabela** Huffman,long long unsigned int* frequencia);
 * pos-condicao: vetor de tabela huffman preeenchido.
 */
 void AchaCodigos(Tabela** Huffman,Lista* lista,char* folhas);
+
+
+void LiberaTabela(Tabela** Huffman);
+
 #endif

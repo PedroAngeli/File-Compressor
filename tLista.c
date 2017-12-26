@@ -144,25 +144,16 @@ void ImprimeLista(Lista* lista)
 
 
 void LiberaCelula(Celula* p){
-	printf("cu");
-
 	if(p != NULL){
-
 		if(p->arvore != NULL)
 			LiberaArvore(p->arvore);
-
 		free(p);
 	}
-	printf("boceta");
 }
 
 
 void LiberaLista(Lista* lista){
 	Celula* p = lista->primeiro;
-	while(p != NULL){
-		Celula* aux = p->prox;
-		LiberaCelula(p);
-		p = p->prox;
-	}
+	LiberaCelula(p);
 	free(lista);
 }

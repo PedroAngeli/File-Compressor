@@ -3,9 +3,9 @@
 #define SIZE_MB 8000000
 FILE* AbrirArquivo(char c,char* nome)
 {
-	if(c=='r')
+	if(c=='r'){
 		return fopen(nome,"rb");
-
+	}
 	return fopen(nome,"wb+");
 }
 

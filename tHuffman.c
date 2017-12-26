@@ -56,7 +56,6 @@ void CriaTabela(Tabela** huffman,char* buffer,int direcao,Arvore* arv,unsigned c
 		 for(int i=0;i<strlen(buffer);i++)
 			bitmapAppendLeastSignificantBit(&huffman[(unsigned char)ArvoreInfo(arv)]->bm,buffer[i]);
 		huffman[(unsigned char)ArvoreInfo(arv)]->bm.length =  strlen(buffer);
-
 		return;
 	}
 
@@ -140,7 +139,7 @@ void GeraCompactado(Tabela** Huffman,unsigned char* bytesDoArquivo,long long uns
 	fwrite(bitmapGetContents(all),sizeof(unsigned char),tamanhoCodigo/8,saida);
 	tamanhoCodigo-=bitmapGetLength(all);
 	fwrite(&tamanhoCodigo,sizeof(unsigned char),1,saida);
-
+	bitmapFreeContents(&all);
 }
 
 
@@ -186,4 +185,12 @@ void PrintaBitMapHuffman(Tabela** Huffman,long long unsigned int* frequencia)
 	}*/
 
 
+}
+
+
+void LiberaTabela(Tabela** Huffman){
+	for(int i = 0; i < 256; i++){
+		bitmapFreeContents(&Huffman[i]->bm);
+		free(Huffman[i]);
+	}
 }
