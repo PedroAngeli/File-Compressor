@@ -20,7 +20,7 @@ void IteraHuffman(Lista* lista);
 
 void ImprimeCabecalho(bitmap cabecalho);
 
-void CriaTabela(Tabela** huffman,bitmap bm,int direcao,Arvore* arv,char* folhas);
+void CriaTabela(Tabela** huffman,char* buffer,int direcao,Arvore* arv, unsigned char* folhas,int indice);
 
 void CriaTabelaVazia(Tabela** Huffman,int tam);
 
@@ -32,4 +32,7 @@ void GeraCompactado(Tabela** Huffman,unsigned char* bytesDoArquivo,long long uns
 
 unsigned int ProxMultiploOito(unsigned int tam);
 
+void PrintaBitMapHuffman(Tabela** Huffman,long long unsigned int* frequencia);
+
+void AchaCodigos(Tabela** Huffman,Lista* lista,char* folhas);
 #endif

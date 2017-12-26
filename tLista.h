@@ -33,5 +33,8 @@ void ModificaPrimeiro(Lista* lista, Celula* dest);
 
 void ModificaPrimeiro(Lista* lista, Celula* dest);
 
+void LiberaCelula(Celula* p);
+
+void LiberaLista(Lista* lista);
 
 #endif

@@ -70,6 +70,12 @@ void VerificaFrequencia(long long unsigned int* frequencia,unsigned char* bytesD
 
 	for(i=0;i<tamanhoDoArquivo;i++)
 		frequencia[bytesDoArquivo[i]]++;
+	
+
+
+	/*for(i=0;i<256;i++)
+		if(frequencia[i])
+			printf("CHAR: %d FREQ: %d\n",i,frequencia[i]);*/
 
 }
 void NomeArquivo(char* argv,char* nomeArquivo)
@@ -136,7 +142,7 @@ void GeraDescompactado(FILE* entrada,int tamanhoAparenteCabecalho, char* nomeArq
 	strcat(nomeSaida, ".");
 	strcat(nomeSaida, formato);
 	}
-	printf("Saida: %s\n", nomeSaida);
+	//printf("Saida: %s\n", nomeSaida);
 	FILE* saida = AbrirArquivo('w', nomeSaida);
 
 	int tamanhoRealCabecalho = ProxMultiploOito(tamanhoAparenteCabecalho);
@@ -169,75 +175,85 @@ void GeraDescompactado(FILE* entrada,int tamanhoAparenteCabecalho, char* nomeArq
 	int j=0;
 	for(;j<cabecalho.length;j++)
 	{
-		printf("%d", bitmapGetBit(cabecalho,j));
+		//printf("%d", bitmapGetBit(cabecalho,j));
 		Cabecalho[j]=bitmapGetBit(cabecalho,j);
 	}
 
 	//cria vetor com as folhas
 	int qntfolhas = ObtemQuantidadeDeFolhasCabecalho(Cabecalho, tamanhoAparenteCabecalho);
-	printf("qntfolhas:%d", qntfolhas);
-	char folhas[qntfolhas+1];
+	//printf("qntfolhas:%d", qntfolhas);
+	unsigned char folhas[qntfolhas+1];
 	int i = 0;
 	for(i = 0; i < qntfolhas; i++){
 	  fscanf(entrada,"%c", folhas+i);
-		printf("%c", folhas[i]);
+		//printf("%d\n", folhas[i]);
 	}
 
 	Arvore* arvoreDeCodigo = CriaArvoreDescompactada(Cabecalho, folhas);
-	ImprimeArvore(arvoreDeCodigo);
+	//ImprimeArvore(arvoreDeCodigo);
 
 
 	long int tamanhoLixoCodigo;
 	long int tamanhoRealCodigo;
 	long int tamanhoAparenteCodigo;
 	long int inicioDoCodigo = ftell(entrada);
-	printf("inicioDoCodigo: %d\n", inicioDoCodigo);
+	//printf("inicioDoCodigo: %d\n", inicioDoCodigo);
 	//Obtem tamanho do lixo do codigo, posicionado no final do arquivo
 	fseek(entrada, 0, SEEK_END);
 	long int finalDoCodigo = ftell(entrada);
-	printf("finalDoCodigo: %d\n", finalDoCodigo);
+	//printf("finalDoCodigo: %d\n", finalDoCodigo);
 	fseek(entrada, finalDoCodigo-1, SEEK_SET);
 	fread(&tamanhoLixoCodigo, sizeof(char), 1, entrada);
-	printf("TamanhoLIXO: %d\n", tamanhoLixoCodigo);
+	//printf("TamanhoLIXO: %d\n", tamanhoLixoCodigo);
 	fseek(entrada, inicioDoCodigo, SEEK_SET);
 
 	tamanhoRealCodigo = (finalDoCodigo-inicioDoCodigo-1)*8;
 	tamanhoAparenteCodigo = tamanhoRealCodigo-tamanhoLixoCodigo;
 
 
-	printf("TamanhoReal: %d\n", tamanhoRealCodigo);
-	printf("tamanhoAparenteCodigo: %d\n", tamanhoAparenteCodigo );
+	//printf("TamanhoReal: %d\n", tamanhoRealCodigo);
+	//printf("tamanhoAparenteCodigo: %d\n", tamanhoAparenteCodigo );
 	bitmap codigoFinal = bitmapInit(tamanhoRealCodigo);
 	fread(codigoFinal.contents, sizeof(char), tamanhoRealCodigo/8, entrada);
 	codigoFinal.length = tamanhoAparenteCodigo;
-	printf("MAXSIZE:%d LENGTH:%d\n", codigoFinal.max_size, codigoFinal.length);
-	/*for(i=0;i<codigoFinal.length;i++){
-		printf("%d", bitmapGetBit(codigoFinal, i));
-	}*/
+	//printf("MAXSIZE:%d LENGTH:%d\n", codigoFinal.max_size, codigoFinal.length);
+	for(i=0;i<codigoFinal.length;i++){
+		//printf("%d", bitmapGetBit(codigoFinal, i));
+	}
+ int iterador = 0;
+	 int qntIteracoes = tamanhoAparenteCodigo;
+	 //printf("Tamanho aparecente bits:%d bytes%d\n",tamanhoAparenteCodigo, tamanhoAparenteCodigo/8 );
+	 while(iterador < qntIteracoes)
+	 {
+	 	unsigned char buffer = PercorreArvore(arvoreDeCodigo, codigoFinal, &iterador);
+		
+	 	fwrite(&buffer, sizeof(unsigned char), 1, saida);
+	 }
 
-	int iterador = 0;
+	/*int iterador = 0;
+	int countCodigo = 0;
 	char streamDeCodigo[SIZE_MB];
 	streamDeCodigo[0] = '\0';
 	int qntIteracoes = tamanhoAparenteCodigo;
 
 	while(iterador < qntIteracoes)
 	{
-		printf("iterador: %d\n", iterador);
-		if(iterador != 0 && iterador%SIZE_MB == 0){
+		//printf("iterador: %d\n", iterador);
+		if(countCodigo != 0 && countCodigo%SIZE_MB == 0){
 			fwrite(streamDeCodigo, sizeof(char), SIZE_MB, saida);
 			streamDeCodigo[0] = '\0';
+			countCodigo = 0;
 		}
 		char buffer = PercorreArvore(arvoreDeCodigo, codigoFinal, &iterador);
-		char temp[2];
-		CriaStringChar(buffer, temp);
-		strcat(streamDeCodigo, temp);
+		printf("buffer:%c; count:%d\n", buffer, countCodigo);
+		streamDeCodigo[countCodigo++] = buffer;
 
 	}
 	if(tamanhoAparenteCodigo-iterador<SIZE_MB){
-		printf("iterador: %d\n", iterador);
+		//printf("iterador: %d\n", iterador);
 		printf("streamDeCodigo:%s|size:%d|\n", streamDeCodigo, strlen(streamDeCodigo));
 		fwrite(streamDeCodigo, sizeof(char), strlen(streamDeCodigo), saida);
-	}
+	}*/
 
 
 }

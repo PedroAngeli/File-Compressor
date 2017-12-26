@@ -50,9 +50,17 @@ int main(int argc,char** argv)
 
 	bitmap bm = bitmapInit(SIZE_MB);
 
-	char folhas[MAX_SIZE_OF_ASCII];
+	unsigned char folhas[MAX_SIZE_OF_ASCII];
 
-	CriaTabela(Huffman,bm,2,ListaArvore(ListaPrimeiro(lista)),folhas);
+	AchaCodigos(Huffman,lista,folhas);
+
+	LiberaLista(lista);
+
+	bitmapFree(&cabecalho);
+	//ImprimeArvore(ListaArvore(ListaPrimeiro(lista)));
+
+
+	//PrintaBitMapHuffman(Huffman,frequencia);
 
 	entrada =  AbrirArquivo('r',nomeArquivo);
 

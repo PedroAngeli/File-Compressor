@@ -1,4 +1,5 @@
 #include "tLista.h"
+#include "tArvore.h"
 #include <string.h>
 
 struct celula
@@ -51,7 +52,7 @@ void CriaListaDeArvore(Lista* lista,unsigned char* bytesDoArquivo,long long unsi
 	for(int i=0;i<tam;i++)
 		if(frequencia[i])
 		{
-			Arvore* no = CriaArvore(NULL,NULL,frequencia[i],(char)i);
+			Arvore* no = CriaArvore(NULL,NULL,frequencia[i],(unsigned char)i);
 			InsereNaLista(lista,no);
 		}
 }
@@ -81,7 +82,7 @@ void InsereOrdenado(Lista* lista, Arvore* arv)
 {
 	Celula* p = (Celula*) malloc(sizeof(Celula));
 	p->arvore = arv;
-	Celula* ant;	
+	Celula* ant;
 
 	for(Celula* aux =  lista->primeiro; aux!=NULL; aux=aux->prox)
 	{
@@ -139,4 +140,21 @@ void ImprimeLista(Lista* lista)
 	for(Celula* p=lista->primeiro;p!=NULL;p=p->prox)
 		printf("{%c:%d}\t",ArvoreInfo(p->arvore), ArvoreValor(p->arvore));
 	printf("\n");
+}
+
+
+void LiberaCelula(Celula* p){
+	LiberaArvore(p->arvore);
+	free(p);
+}
+
+
+void LiberaLista(Lista* lista){
+	Celula* p = lista->primeiro;
+	while(p != NULL){
+		Celula* aux = p->prox;
+		LiberaCelula(p);
+		p = p->prox;
+	}
+	free(lista);
 }

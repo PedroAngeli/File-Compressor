@@ -53,7 +53,7 @@ unsigned int bitmapGetLength(bitmap bm) {
  * @param max_size O tamanho maximo para o mapa de bits.
  * @return O mapa de bits inicializado.
  */
-bitmap bitmapInit(unsigned int max_size) {	
+bitmap bitmapInit(unsigned int max_size) {
 	bitmap bm;
 	// definir tamanho maximo em bytes, com arredondamento para cima
 	unsigned int max_sizeInBytes=(max_size+7)/8;
@@ -105,7 +105,7 @@ void bitmapSetBit(bitmap* bm, unsigned int index, unsigned char bit) {
  * @param bm O mapa de bits.
  * @param bit O novo valor do bit.
  * @pre bitmapGetLength(bm) < bitmapGetMaxSize(bm)
- * @post (bitmapGetBit(bm,bitmapGetLength(bm) @ pre)==bit) 
+ * @post (bitmapGetBit(bm,bitmapGetLength(bm) @ pre)==bit)
  * and (bitmapGetLength(bm) == bitmapGetLength(bm) @ pre+1)
  */
 void bitmapAppendLeastSignificantBit(bitmap* bm, unsigned char bit) {
@@ -116,4 +116,7 @@ void bitmapAppendLeastSignificantBit(bitmap* bm, unsigned char bit) {
 	bitmapSetBit(bm, bm->length-1, bit);
 }
 
-
+void bitmapFree(bitmap*bm){
+	free(bm->contents);
+	free(bm);
+}

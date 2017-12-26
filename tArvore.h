@@ -6,7 +6,7 @@
 
 typedef struct arvore Arvore;
 
-Arvore* CriaArvore(Arvore* esq,Arvore* dir,int valor,char info);
+Arvore* CriaArvore(Arvore* esq,Arvore* dir,int valor,unsigned char info);
 
 Arvore* CriaPai(Arvore* esq, Arvore* dir);
 
@@ -28,8 +28,10 @@ Arvore* ArvoreEsquerda(Arvore* arv);
 
 Arvore* ArvoreDireita(Arvore* arv);
 
-Arvore* CriaArvoreDescompactada(char* cabecalho, char* folhas);
+Arvore* CriaArvoreDescompactada(unsigned char* cabecalho, unsigned char* folhas);
 
-char PercorreArvore(Arvore* arv, bitmap codigo,  int* pos);
+unsigned char PercorreArvore(Arvore* arv, bitmap codigo,  int* pos);
+
+void LiberaArvore(Arvore* arv);
 
 #endif

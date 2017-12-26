@@ -7,12 +7,12 @@ struct arvore
 {
 	Arvore* direita;
 	Arvore* esquerda;
-	char info;
+	unsigned char info;
 	int valor;
 };
 
 
-Arvore* CriaArvore(Arvore* esq,Arvore* dir,int valor,char info)
+Arvore* CriaArvore(Arvore* esq,Arvore* dir,int valor,unsigned char info)
 {
 	Arvore* arv = (Arvore*) malloc(sizeof(Arvore));
 	arv->esquerda=esq;
@@ -69,7 +69,7 @@ void ImprimeArvore(Arvore *arv){
 	Arvore* p = arv;
 	printf("<");
 	if(p != NULL){
-		printf(" %c ", p->info);
+		printf("%d", p->info);
 		ImprimeArvore(p->esquerda);
 		ImprimeArvore(p->direita);
 	}
@@ -78,7 +78,7 @@ void ImprimeArvore(Arvore *arv){
 
 int contadorDoCabecalho = -1;
 int contadorDeFolhas = 0;
-Arvore* CriaArvoreDescompactada(char* cabecalho, char* folhas){
+Arvore* CriaArvoreDescompactada(unsigned char* cabecalho, unsigned char* folhas){
 	//preordem
 	contadorDoCabecalho++;
 	if((int)cabecalho[contadorDoCabecalho] == 1){
@@ -92,16 +92,16 @@ Arvore* CriaArvoreDescompactada(char* cabecalho, char* folhas){
 	return no;
 }
 
-char PercorreArvore(Arvore* arv, bitmap codigo,  int* pos){
+unsigned char PercorreArvore(Arvore* arv, bitmap codigo,  int* pos){
 	Arvore* p = arv;
 	if(p != NULL)
 	{
 			if(p->esquerda == NULL && p->direita == NULL){
-					//printf("|%c| ", p->info);
+					//printf("|%d| ", p->info);
 					return p->info;
 			}
-			printf("|Travou no pos:%d|", (*pos)+1);
-			char cod = bitmapGetBit(codigo, *pos);
+			//printf("|Travou no pos:%d|", (*pos)+1);
+			unsigned char cod = bitmapGetBit(codigo, *pos);
 			//printf("|%d:pos:%d|", cod, *pos);
 			(*pos)++;
 
@@ -110,5 +110,13 @@ char PercorreArvore(Arvore* arv, bitmap codigo,  int* pos){
 			else if(cod == 1)
 				return PercorreArvore(arv->direita, codigo, pos);
 
+	}
+}
+
+void LiberaArvore(Arvore* arv){
+	if(arv!=NULL){
+		LiberaArvore(arv->esquerda);
+		LiberaArvore(arv->direita);
+		free(arv);
 	}
 }

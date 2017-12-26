@@ -3,7 +3,7 @@
 
 struct tabela
 {
-	char c;
+	unsigned char c;
 	bitmap bm;
 };
 
@@ -20,35 +20,49 @@ void CriaTabelaVazia(Tabela** Huffman,int tam)
 	{
 		Huffman[i]= (Tabela*) malloc(sizeof(Tabela));
 		Huffman[i]->bm = bitmapInit(SIZE_MB);
-		Huffman[i]->c=(char)i;
+		Huffman[i]->c=(unsigned char)i;
 	}
+
+}
+
+
+void AchaCodigos(Tabela** Huffman,Lista* lista,char* folhas)
+{
+
+	char buffer[100000];
+
+
+	CriaTabela(Huffman,buffer,2,ListaArvore(ListaPrimeiro(lista)),folhas,-1);
 
 }
 
 int count=0;
 
-void CriaTabela(Tabela** huffman,bitmap bm,int direcao,Arvore* arv,char* folhas)
+void CriaTabela(Tabela** huffman,char* buffer,int direcao,Arvore* arv,unsigned char* folhas,int indice)
 {
 
 	if(arv==NULL) return;
 
-	if(direcao==1) bitmapAppendLeastSignificantBit(&bm,'1');
-	else if(direcao==0) bitmapAppendLeastSignificantBit(&bm,'0');
-
+	if(direcao==1) buffer[indice] = '1';
+	else if(direcao==0) buffer[indice] = '0';
 
 	if(ArvoreEsquerda(arv)==NULL && ArvoreDireita(arv)==NULL)
 	{
+		buffer[indice+1] = '\0';
+		//if(ArvoreInfo(arv)=='\0') printf("%s",buffer);
 		folhas[count] = ArvoreInfo(arv);
 		count++;
-		strncpy(bitmapGetContents(huffman[(unsigned char)ArvoreInfo(arv)]->bm),bitmapGetContents(bm),bitmapGetLength(bm));
-		huffman[(unsigned char)ArvoreInfo(arv)]->bm.max_size = bitmapGetMaxSize(bm);
-		huffman[(unsigned char)ArvoreInfo(arv)]->bm.length =  bitmapGetLength(bm);
+		huffman[(unsigned char)ArvoreInfo(arv)]->bm.max_size = SIZE_MB;
+		 for(int i=0;i<strlen(buffer);i++)
+			bitmapAppendLeastSignificantBit(&huffman[(unsigned char)ArvoreInfo(arv)]->bm,buffer[i]);
+		huffman[(unsigned char)ArvoreInfo(arv)]->bm.length =  strlen(buffer);
+
 		return;
 	}
 
-	CriaTabela(huffman,bm,0,ArvoreEsquerda(arv),folhas);
-	if(direcao==2) bm = bitmapInit(SIZE_MB);
-	CriaTabela(huffman,bm,1,ArvoreDireita(arv),folhas);
+	CriaTabela(huffman,buffer,0,ArvoreEsquerda(arv),folhas,indice + 1);
+
+	CriaTabela(huffman,buffer,1,ArvoreDireita(arv),folhas,indice + 1);
 
 }
 
@@ -96,24 +110,25 @@ void GeraCompactado(Tabela** Huffman,unsigned char* bytesDoArquivo,long long uns
 	int tamanhoCabecalho = (int)bitmapGetLength(cabecalho);
 	fwrite(&tamanhoCabecalho,sizeof(int),1,saida);
 	fwrite(bitmapGetContents(cabecalho), sizeof(unsigned char), ProxMultiploOito(bitmapGetLength(cabecalho))/8, saida);
-	fwrite(folhas,sizeof(unsigned char),strlen(folhas),saida);
+	fwrite(folhas,sizeof(unsigned char),count,saida);
 
 	while(tamanhoDoArquivo>0)
 	{
-		int retorno = fread(bytesDoArquivo,sizeof(char),SIZE_MB,entrada);
+		int retorno = fread(bytesDoArquivo,sizeof(unsigned char),SIZE_MB,entrada);
 		tamanhoDoArquivo-=retorno;
 
-		for(int i=0;i<retorno-1;i++)
+		for(long long int i=0;i<retorno;i++)
 		{
 			for(int j=0;j<bitmapGetLength(Huffman[bytesDoArquivo[i]]->bm);j++)
 			{
+
 				if(bitmapGetLength(all) < SIZE_MB)
 					bitmapAppendLeastSignificantBit(&all,bitmapGetBit(Huffman[bytesDoArquivo[i]]->bm,j));
 
 				else
 				{
-					fwrite(bitmapGetContents(all),sizeof(unsigned char),bitmapGetLength(all),saida);
-					bitmap all = bitmapInit(SIZE_MB);
+					fwrite(bitmapGetContents(all),sizeof(unsigned char),bitmapGetLength(all)/8,saida);
+					all = bitmapInit(SIZE_MB);
 					bitmapAppendLeastSignificantBit(&all,bitmapGetBit(Huffman[bytesDoArquivo[i]]->bm,j));
 				}
 			}
@@ -145,6 +160,7 @@ unsigned int ProxMultiploOito(unsigned int tam){
 void IteraHuffman(Lista* lista)
 {
 	OrdenaLista(lista);
+	//ImprimeLista(lista);
 	Arvore* arv;
 	Celula* p;
 
@@ -158,5 +174,16 @@ void IteraHuffman(Lista* lista)
 			free(p);
 
 		}
+
+}
+
+void PrintaBitMapHuffman(Tabela** Huffman,long long unsigned int* frequencia)
+{
+	/*for(int i=0;i<256;i++)
+	{
+		if(frequencia[i])
+			printf("%s\n",Huffman[i]->bm.contents);
+	}*/
+
 
 }
