@@ -54,9 +54,9 @@ int main(int argc,char** argv)
 
 	AchaCodigos(Huffman,lista,folhas);
 
-	LiberaLista(lista);
 
-	bitmapFree(&cabecalho);
+
+	//bitmapFree(&cabecalho);
 	//ImprimeArvore(ListaArvore(ListaPrimeiro(lista)));
 
 
@@ -75,8 +75,9 @@ int main(int argc,char** argv)
 
 	GeraCompactado(Huffman,bytesDoArquivo,tamanhoDoArquivo,entrada,saida, cabecalho, nomeArquivo,folhas);
 
-	FecharArquivo(saida);
 
+	FecharArquivo(saida);
+	//LiberaLista(lista);
 
 	return 0;
 }

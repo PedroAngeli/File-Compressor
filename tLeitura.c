@@ -70,7 +70,7 @@ void VerificaFrequencia(long long unsigned int* frequencia,unsigned char* bytesD
 
 	for(i=0;i<tamanhoDoArquivo;i++)
 		frequencia[bytesDoArquivo[i]]++;
-	
+
 
 
 	/*for(i=0;i<256;i++)
@@ -151,7 +151,7 @@ void GeraDescompactado(FILE* entrada,int tamanhoAparenteCabecalho, char* nomeArq
 	bitmap cabecalho = bitmapInit(tamanhoRealCabecalho);
 	bitmap aux;
 	int contador = 0;
-
+	int i;
 	int vezes = (tamanhoAparenteCabecalho/8)+1;
 
 	while(contador < vezes)
@@ -162,12 +162,19 @@ void GeraDescompactado(FILE* entrada,int tamanhoAparenteCabecalho, char* nomeArq
 
 		aux.length=8;
 
-		if(contador != vezes-1) for(int i=0;i<8;i++) bitmapAppendLeastSignificantBit(&cabecalho, bitmapGetBit(aux,i));
+		if(contador != vezes-1){
+			for(i=0;i<8;i++)
+					bitmapAppendLeastSignificantBit(&cabecalho, bitmapGetBit(aux,i));
+			bitmapFreeContents(&aux);
+		}
 
 			contador++;
+
 	}
-	for(int i=0;i<8-tamanhoLixoCabecalho;i++)
+	for(i=0;i<8-tamanhoLixoCabecalho;i++)
 		bitmapAppendLeastSignificantBit(&cabecalho, bitmapGetBit(aux,i));
+	bitmapFreeContents(&aux);
+
 
 	unsigned char Cabecalho[tamanhoRealCabecalho+1];
 
@@ -178,12 +185,11 @@ void GeraDescompactado(FILE* entrada,int tamanhoAparenteCabecalho, char* nomeArq
 		//printf("%d", bitmapGetBit(cabecalho,j));
 		Cabecalho[j]=bitmapGetBit(cabecalho,j);
 	}
-
+	bitmapFreeContents(&cabecalho);
 	//cria vetor com as folhas
 	int qntfolhas = ObtemQuantidadeDeFolhasCabecalho(Cabecalho, tamanhoAparenteCabecalho);
 	//printf("qntfolhas:%d", qntfolhas);
 	unsigned char folhas[qntfolhas+1];
-	int i = 0;
 	for(i = 0; i < qntfolhas; i++){
 	  fscanf(entrada,"%c", folhas+i);
 		//printf("%d\n", folhas[i]);
@@ -226,10 +232,13 @@ void GeraDescompactado(FILE* entrada,int tamanhoAparenteCabecalho, char* nomeArq
 	 while(iterador < qntIteracoes)
 	 {
 	 	unsigned char buffer = PercorreArvore(arvoreDeCodigo, codigoFinal, &iterador);
-		
+
 	 	fwrite(&buffer, sizeof(unsigned char), 1, saida);
 	 }
 
+	 LiberaArvore(arvoreDeCodigo);
+	 bitmapFreeContents(&codigoFinal);
+	 FecharArquivo(saida);
 	/*int iterador = 0;
 	int countCodigo = 0;
 	char streamDeCodigo[SIZE_MB];

@@ -116,6 +116,10 @@ void bitmapAppendLeastSignificantBit(bitmap* bm, unsigned char bit) {
 	bitmapSetBit(bm, bm->length-1, bit);
 }
 
+void bitmapFreeContents(bitmap* bm){
+	free(bm->contents);
+}
+
 void bitmapFree(bitmap*bm){
 	free(bm->contents);
 	free(bm);

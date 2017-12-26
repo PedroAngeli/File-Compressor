@@ -22,6 +22,7 @@ bitmap bitmapInit(unsigned int max_size);
 unsigned char bitmapGetBit(bitmap bm, unsigned int index);
 void bitmapSetBit(bitmap* bm, unsigned int index, unsigned char bit);
 void bitmapAppendLeastSignificantBit(bitmap* bm, unsigned char bit);
-void bitmapFree(bitmap*bm);
+void bitmapFree(bitmap* bm);
+void bitmapFreeContents(bitmap* bm);
 
 #endif /*BITMAP_H_*/

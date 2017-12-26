@@ -28,5 +28,6 @@ int main(int argc,char** argv)
 
 	GeraDescompactado(entrada,tamanhoCabecalho, nomeArquivo, formato);
 
+	FecharArquivo(entrada);
 	return 0;
 }
